@@ -1,0 +1,2566 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KempX Intelligence Layer — Above Tools. Above Models. Above Everything.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
+  /* ═══════════════════════════════════════
+     THEME TOKENS
+  ═══════════════════════════════════════ */
+  :root {
+    --accent:  #7b6cff;
+    --accent2: #a78bfa;
+    --accent3: #38bdf8;
+    --gold:    #e4b87a;
+    --green:   #34d399;
+    --red:     #f87171;
+  }
+
+  [data-theme="dark"] {
+    --bg:            #07070f;
+    --bg2:           #0b0b17;
+    --surface-s:     #101020;
+    --surface2:      #15152a;
+    --border:        rgba(255,255,255,0.055);
+    --border-mid:    rgba(255,255,255,0.09);
+    --border-bright: rgba(255,255,255,0.14);
+    --text:          #eeeef8;
+    --text-muted:    rgba(238,238,248,0.48);
+    --text-dim:      rgba(238,238,248,0.24);
+    --glow-hero:     rgba(123,108,255,0.16);
+    --glow-orb2:     rgba(56,189,248,0.09);
+    --glow-orb3:     rgba(167,139,250,0.09);
+    --nav-bg:        rgba(7,7,15,0.72);
+    --footer-bg:     rgba(7,7,15,0.92);
+    --grid-line:     rgba(255,255,255,0.022);
+    --chaos-bg:      rgba(16,16,32,0.85);
+    --layer-item-bg: rgba(16,16,32,0.6);
+    --mockup-bg:     #07070f;
+    --signal-surface:rgba(123,108,255,0.06);
+    --signal-border: rgba(123,108,255,0.18);
+    --category-bg:   rgba(123,108,255,0.04);
+    --particle-rgb:  167,139,250;
+    --noise-opacity: 0.55;
+    --toggle-bg:     rgba(255,255,255,0.07);
+    --toggle-border: rgba(255,255,255,0.1);
+    --toggle-icon:   rgba(238,238,248,0.5);
+    --compare-after: linear-gradient(135deg,rgba(123,108,255,0.07),rgba(21,21,42,0.85));
+  }
+
+  [data-theme="light"] {
+    --bg:            #f4f4fb;
+    --bg2:           #ebebf7;
+    --surface-s:     #ffffff;
+    --surface2:      #f0f0fa;
+    --border:        rgba(0,0,0,0.07);
+    --border-mid:    rgba(0,0,0,0.12);
+    --border-bright: rgba(0,0,0,0.18);
+    --text:          #0d0d20;
+    --text-muted:    rgba(13,13,32,0.54);
+    --text-dim:      rgba(13,13,32,0.32);
+    --glow-hero:     rgba(123,108,255,0.10);
+    --glow-orb2:     rgba(56,189,248,0.07);
+    --glow-orb3:     rgba(167,139,250,0.07);
+    --nav-bg:        rgba(244,244,251,0.82);
+    --footer-bg:     rgba(235,235,247,0.95);
+    --grid-line:     rgba(0,0,0,0.035);
+    --chaos-bg:      rgba(255,255,255,0.88);
+    --layer-item-bg: rgba(255,255,255,0.75);
+    --mockup-bg:     #f4f4fb;
+    --signal-surface:rgba(123,108,255,0.05);
+    --signal-border: rgba(123,108,255,0.2);
+    --category-bg:   rgba(123,108,255,0.04);
+    --particle-rgb:  123,108,255;
+    --noise-opacity: 0.18;
+    --toggle-bg:     rgba(0,0,0,0.06);
+    --toggle-border: rgba(0,0,0,0.1);
+    --toggle-icon:   rgba(13,13,32,0.5);
+    --compare-after: linear-gradient(135deg,rgba(123,108,255,0.06),rgba(240,240,250,0.95));
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background 0.35s ease, color 0.35s ease;
+  }
+
+  /* NOISE */
+  body::after {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:999; opacity:var(--noise-opacity);
+    transition: opacity 0.35s;
+  }
+
+  /* ═══════════════════════════════════════
+     THEME TOGGLE
+  ═══════════════════════════════════════ */
+  .theme-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--toggle-bg); border: 1px solid var(--toggle-border);
+    cursor: pointer; transition: all 0.22s;
+    color: var(--toggle-icon); flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    background: rgba(123,108,255,0.12);
+    border-color: rgba(123,108,255,0.25);
+    color: var(--accent2);
+  }
+  .theme-toggle svg { width:16px; height:16px; transition: transform 0.4s ease; }
+  .theme-toggle:hover svg { transform: rotate(20deg); }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="light"] .icon-sun  { display: block; }
+  [data-theme="light"] .icon-moon { display: none; }
+
+  /* ═══════════════════════════════════════
+     NAV
+  ═══════════════════════════════════════ */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:200;
+    padding:18px 52px;
+    display:flex; align-items:center; justify-content:space-between;
+    background: var(--nav-bg);
+    backdrop-filter:blur(24px) saturate(1.4);
+    -webkit-backdrop-filter:blur(24px) saturate(1.4);
+    border-bottom:1px solid var(--border);
+    transition: background 0.35s, border-color 0.35s;
+  }
+  .nav-logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:19px;
+    letter-spacing:-0.5px; color:var(--text); text-decoration:none;
+    display:flex; align-items:center; gap:9px;
+    transition: color 0.25s;
+  }
+  .nav-logo-mark {
+    width:30px; height:30px;
+    background:linear-gradient(135deg, var(--accent) 0%, #9d8bff 100%);
+    border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:800; color:#fff;
+    box-shadow: 0 4px 14px rgba(123,108,255,0.35); flex-shrink:0;
+  }
+  .nav-wordmark { letter-spacing:-0.3px; }
+  .nav-layer-tag {
+    font-family:'DM Mono',monospace; font-size:9.5px;
+    letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--text-dim); background:rgba(123,108,255,0.06);
+    border:1px solid var(--border); border-radius:4px;
+    padding:2px 7px; margin-left:2px;
+    transition: color 0.25s, border-color 0.25s;
+  }
+  .nav-links { display:flex; align-items:center; gap:30px; list-style:none; }
+  .nav-links a {
+    color:var(--text-muted); text-decoration:none; font-size:13.5px;
+    font-weight:500; letter-spacing:0.02em; transition:color 0.2s;
+  }
+  .nav-links a:hover { color:var(--text); }
+  .nav-right { display:flex; align-items:center; gap:12px; }
+  .nav-cta {
+    background:var(--accent) !important; color:#fff !important;
+    padding:9px 20px; border-radius:8px; font-weight:600 !important;
+    font-size:13px !important; letter-spacing:0.01em; text-decoration:none;
+    transition:all 0.22s; box-shadow:0 4px 16px rgba(123,108,255,0.3);
+    display:inline-block;
+  }
+  .nav-cta:hover {
+    background:#8f7fff !important; transform:translateY(-1px);
+    box-shadow:0 8px 26px rgba(123,108,255,0.42) !important;
+  }
+
+  /* ═══════════════════════════════════════
+     HERO
+  ═══════════════════════════════════════ */
+  #hero {
+    position:relative; min-height:100vh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    text-align:center; padding:140px 24px 100px; overflow:hidden;
+  }
+  .hero-canvas { position:absolute; inset:0; pointer-events:none; }
+  .hero-grid {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:68px 68px;
+    mask-image:radial-gradient(ellipse 90% 85% at 50% 45%, black 15%, transparent 75%);
+    transition: background-image 0.35s;
+  }
+  .hero-orb { position:absolute; border-radius:50%; filter:blur(90px); will-change:transform; }
+  .hero-orb-1 {
+    width:680px; height:680px;
+    background:radial-gradient(circle, var(--glow-hero) 0%, transparent 70%);
+    top:-120px; left:50%; animation:orb-center 9s ease-in-out infinite;
+  }
+  .hero-orb-2 {
+    width:420px; height:420px;
+    background:radial-gradient(circle, var(--glow-orb2) 0%, transparent 70%);
+    bottom:-40px; right:-80px; animation:orb-float 10s ease-in-out infinite; animation-delay:-3s;
+  }
+  .hero-orb-3 {
+    width:380px; height:380px;
+    background:radial-gradient(circle, var(--glow-orb3) 0%, transparent 70%);
+    bottom:60px; left:-60px; animation:orb-float 11s ease-in-out infinite;
+    animation-delay:-6s; animation-direction:reverse;
+  }
+  @keyframes orb-center {
+    0%,100% { transform:translateX(-50%) translateY(0); }
+    50%      { transform:translateX(-50%) translateY(-22px); }
+  }
+  @keyframes orb-float {
+    0%,100% { transform:translateY(0) translateX(0); }
+    33%     { transform:translateY(-28px) translateX(12px); }
+    66%     { transform:translateY(12px) translateX(-8px); }
+  }
+
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:9px;
+    background:rgba(123,108,255,0.1); border:1px solid rgba(123,108,255,0.22);
+    border-radius:100px; padding:7px 18px; font-size:11.5px; font-weight:600;
+    letter-spacing:0.09em; text-transform:uppercase; color:var(--accent2);
+    margin-bottom:44px; position:relative; z-index:2;
+    animation:fade-up 0.8s ease both;
+  }
+  .hero-badge-dot {
+    width:6px; height:6px; background:var(--accent2);
+    border-radius:50%; animation:pulse-dot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%    { opacity:0.4; transform:scale(0.65); }
+  }
+
+  h1 {
+    font-family:'DM Serif Display',serif;
+    font-size:clamp(48px,7.5vw,92px); font-weight:400;
+    line-height:1.03; letter-spacing:-0.025em;
+    max-width:880px; position:relative; z-index:2;
+    animation:fade-up 0.85s 0.08s ease both;
+  }
+  h1 em {
+    font-style:italic;
+    background:linear-gradient(130deg, var(--accent2) 0%, var(--accent3) 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .hero-sub {
+    margin-top:32px; font-size:clamp(16px,1.8vw,19px);
+    color:var(--text-muted); max-width:540px; line-height:1.75;
+    font-weight:400; position:relative; z-index:2;
+    animation:fade-up 0.85s 0.16s ease both;
+  }
+  .hero-layer-reinforce {
+    display:inline-flex; align-items:center; gap:6px;
+    margin-top:22px; font-family:'DM Mono',monospace;
+    font-size:11px; color:var(--text-dim); letter-spacing:0.07em;
+    text-transform:uppercase; position:relative; z-index:2;
+    animation:fade-up 0.85s 0.22s ease both;
+  }
+  .hero-layer-reinforce span { color:var(--accent2); opacity:0.8; }
+  .hero-actions {
+    display:flex; gap:14px; margin-top:46px; position:relative; z-index:2;
+    animation:fade-up 0.85s 0.28s ease both;
+  }
+  .btn-primary {
+    background:var(--accent); color:#fff; padding:15px 32px; border-radius:10px;
+    font-family:'Syne',sans-serif; font-size:15px; font-weight:600;
+    text-decoration:none; border:none; cursor:pointer; transition:all 0.25s;
+    box-shadow:0 6px 22px rgba(123,108,255,0.32); letter-spacing:0.01em;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-primary:hover { background:#8f7fff; transform:translateY(-2px); box-shadow:0 14px 36px rgba(123,108,255,0.44); }
+  .btn-ghost {
+    background:transparent; color:var(--text-muted); padding:15px 32px; border-radius:10px;
+    font-family:'Syne',sans-serif; font-size:15px; font-weight:600;
+    text-decoration:none; border:1px solid var(--border-mid); cursor:pointer;
+    transition:all 0.25s; display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-ghost:hover { border-color:var(--border-bright); color:var(--text); transform:translateY(-2px); }
+
+  @keyframes fade-up {
+    from { opacity:0; transform:translateY(22px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* Hero layer diagram */
+  .hero-diagram {
+    position:relative; z-index:2; margin-top:0;
+    width:100%; max-width:760px;
+    animation:fade-up 0.85s 0.44s ease both;
+  }
+  .layer-stack { display:flex; flex-direction:column; gap:0; }
+  .layer-item {
+    border:1px solid var(--border); border-radius:12px; padding:16px 24px;
+    display:flex; align-items:center; gap:16px;
+    background:var(--layer-item-bg); backdrop-filter:blur(12px);
+    transition:border-color 0.3s, background 0.35s;
+  }
+  .layer-item:hover { border-color:var(--border-mid); }
+  .layer-kempx {
+    background:linear-gradient(135deg, rgba(123,108,255,0.14) 0%, rgba(56,189,248,0.07) 100%) !important;
+    border-color:rgba(123,108,255,0.32) !important; border-radius:15px; padding:22px 28px;
+    box-shadow:0 0 64px rgba(123,108,255,0.13), inset 0 1px 0 rgba(255,255,255,0.07);
+  }
+  .layer-connector { display:flex; justify-content:center; padding:2px 0; }
+  .layer-connector::before {
+    content:''; width:1px; height:26px;
+    background:linear-gradient(to bottom, rgba(123,108,255,0.55), rgba(255,255,255,0.07));
+    display:block;
+  }
+  .layer-tools { display:flex; gap:7px; flex-wrap:wrap; }
+  .layer-tag {
+    background:rgba(123,108,255,0.06); border:1px solid var(--border);
+    border-radius:5px; padding:4px 10px; font-size:11px;
+    font-family:'DM Mono',monospace; color:var(--text-muted);
+    transition: background 0.25s, color 0.25s;
+  }
+  .layer-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .layer-label { color:var(--text-muted); font-size:13px; font-weight:500; flex:1; text-align:left; }
+
+  /* ═══════════════════════════════════════
+     SHARED
+  ═══════════════════════════════════════ */
+  section { padding:128px 24px; position:relative; }
+  .container { max-width:1100px; margin:0 auto; }
+  .section-eyebrow {
+    font-family:'DM Mono',monospace; font-size:11px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--accent2); margin-bottom:22px; font-weight:500;
+  }
+  .section-title {
+    font-family:'DM Serif Display',serif; font-size:clamp(36px,5vw,58px);
+    font-weight:400; line-height:1.08; letter-spacing:-0.022em; margin-bottom:28px;
+  }
+  .section-body {
+    color:var(--text-muted); font-size:18px; line-height:1.78;
+    max-width:560px; font-weight:400;
+  }
+
+  /* ═══════════════════════════════════════
+     PROBLEM
+  ═══════════════════════════════════════ */
+  #problem {
+    background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    transition: background 0.35s;
+  }
+  .problem-grid { display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; margin-top:72px; }
+  .chaos-visual { position:relative; height:380px; }
+  .chaos-node {
+    position:absolute; background:var(--chaos-bg); border:1px solid var(--border);
+    border-radius:10px; padding:11px 15px; font-size:12px; font-weight:600;
+    color:var(--text-muted); white-space:nowrap; backdrop-filter:blur(8px);
+    transition:all 0.3s; cursor:default;
+  }
+  .chaos-node:hover { border-color:var(--border-mid); color:var(--text); transform:scale(1.05); }
+  .problem-stats { display:flex; flex-direction:column; gap:36px; padding-top:16px; }
+  .stat-item { border-left:2px solid rgba(123,108,255,0.28); padding-left:24px; }
+  .stat-number {
+    font-family:'DM Serif Display',serif; font-size:50px; line-height:1;
+    color:var(--text); margin-bottom:8px; letter-spacing:-0.02em;
+  }
+  .stat-label { color:var(--text-muted); font-size:15px; line-height:1.55; }
+
+  /* Bridge line */
+  .problem-bridge {
+    margin-top:40px; padding-top:32px; border-top:1px solid var(--border);
+    font-family:'DM Serif Display',serif; font-size:clamp(16px,1.6vw,20px);
+    font-style:italic; color:var(--text-muted); line-height:1.5; letter-spacing:-0.01em;
+  }
+  .problem-bridge strong { color:var(--text); font-style:normal; font-weight:400; }
+
+  /* ═══════════════════════════════════════
+     THE LAYER
+  ═══════════════════════════════════════ */
+  #layer { text-align:center; padding:148px 24px; }
+  .layer-visual-full { margin-top:84px; display:flex; flex-direction:column; align-items:center; }
+  .lv-row {
+    width:100%; max-width:720px; background:var(--layer-item-bg);
+    border:1px solid var(--border); border-radius:14px; padding:20px 30px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    backdrop-filter:blur(12px); transition:all 0.3s;
+  }
+  .lv-row:hover { border-color:var(--border-mid); }
+  .lv-row-kempx {
+    background:linear-gradient(135deg, rgba(123,108,255,0.18), rgba(56,189,248,0.09)) !important;
+    border-color:rgba(123,108,255,0.38) !important;
+    box-shadow:0 0 90px rgba(123,108,255,0.18), 0 0 0 1px rgba(123,108,255,0.12);
+    transform:scale(1.025); z-index:5; border-radius:16px;
+  }
+  .lv-label { font-weight:700; font-size:15px; }
+  .lv-desc { font-size:12.5px; color:var(--text-muted); font-family:'DM Mono',monospace; }
+  .lv-conn { width:1px; height:38px; background:linear-gradient(to bottom, rgba(123,108,255,0.48), rgba(123,108,255,0.04)); }
+  .lv-conn-bottom { background:linear-gradient(to bottom, rgba(123,108,255,0.04), rgba(123,108,255,0.15)); }
+  .lv-benefits { display:flex; gap:7px; margin-top:7px; flex-wrap:wrap; }
+  .lv-benefit {
+    background:rgba(123,108,255,0.11); border:1px solid rgba(123,108,255,0.2);
+    border-radius:5px; padding:3px 11px; font-size:11.5px; color:var(--accent2); font-weight:600;
+  }
+
+  /* No-stack-thinks statement */
+  .no-stack-thinks {
+    margin-top:52px; margin-bottom:0;
+    font-family:'DM Mono',monospace; font-size:12px;
+    letter-spacing:0.06em; color:var(--text-dim);
+    position:relative; z-index:2;
+    text-align:center;
+  }
+
+  /* ═══════════════════════════════════════
+     HOW IT WORKS
+  ═══════════════════════════════════════ */
+  #how {
+    background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    transition: background 0.35s;
+  }
+  .systems-grid {
+    display:grid; grid-template-columns:repeat(2,1fr);
+    gap:2px; margin-top:76px; border-radius:20px;
+    overflow:hidden; border:1px solid var(--border);
+  }
+  .system-card {
+    background:var(--surface-s); padding:52px 48px; position:relative;
+    overflow:hidden; transition:background 0.3s; cursor:default;
+  }
+  .system-card:hover { background:var(--surface2); }
+  .system-card::before {
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+      var(--card-glow, rgba(123,108,255,0.06)) 0%, transparent 58%);
+    opacity:0; transition:opacity 0.4s; pointer-events:none;
+  }
+  .system-card:hover::before { opacity:1; }
+  .system-number { font-family:'DM Mono',monospace; font-size:10.5px; color:var(--text-dim); letter-spacing:0.1em; margin-bottom:30px; }
+  .system-icon-large {
+    width:52px; height:52px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; margin-bottom:28px; border:1px solid var(--border);
+  }
+  .system-title { font-family:'DM Serif Display',serif; font-size:27px; font-weight:400; margin-bottom:14px; letter-spacing:-0.01em; }
+  .system-desc { color:var(--text-muted); font-size:15px; line-height:1.72; margin-bottom:32px; }
+  .system-features { list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .system-features li { display:flex; align-items:flex-start; gap:10px; font-size:13.5px; color:var(--text-muted); }
+  .system-features li::before { content:'↳'; color:var(--accent); flex-shrink:0; margin-top:1px; font-family:'DM Mono',monospace; font-size:12px; }
+  .card-v1 { --card-glow:rgba(123,108,255,0.08); }
+  .card-v1 .system-icon-large { background:rgba(123,108,255,0.1); border-color:rgba(123,108,255,0.2); }
+  .card-v2 { --card-glow:rgba(56,189,248,0.06); }
+  .card-v2 .system-icon-large { background:rgba(56,189,248,0.09); border-color:rgba(56,189,248,0.18); }
+  .card-v3 { --card-glow:rgba(228,184,122,0.06); }
+  .card-v3 .system-icon-large { background:rgba(228,184,122,0.09); border-color:rgba(228,184,122,0.18); }
+  .card-v4 { --card-glow:rgba(52,211,153,0.06); }
+  .card-v4 .system-icon-large { background:rgba(52,211,153,0.09); border-color:rgba(52,211,153,0.18); }
+
+  /* ═══════════════════════════════════════
+     PRODUCT EXPERIENCE
+  ═══════════════════════════════════════ */
+  #experience { padding:148px 24px; }
+  .exp-header { margin-bottom:80px; }
+  .exp-views {
+    display:grid; grid-template-columns:repeat(2,1fr);
+    gap:2px; border:1px solid var(--border); border-radius:24px; overflow:hidden;
+  }
+  .exp-card {
+    position:relative; overflow:hidden; background:var(--surface-s);
+    padding:44px; cursor:default; transition:background 0.3s;
+    min-height:340px; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .exp-card:hover { background:var(--surface2); }
+  .exp-card-wide { grid-column:1/-1; min-height:300px; flex-direction:row; align-items:stretch; gap:0; }
+  .exp-card-glow {
+    position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse 80% 70% at 50% 0%, var(--eglow,rgba(123,108,255,0.07)) 0%, transparent 70%);
+  }
+  .exp-card-1 { --eglow:rgba(123,108,255,0.08); }
+  .exp-card-2 { --eglow:rgba(56,189,248,0.06); }
+  .exp-card-3 { --eglow:rgba(228,184,122,0.06); }
+  .exp-card-4 { --eglow:rgba(52,211,153,0.06); }
+  .exp-label {
+    font-family:'DM Mono',monospace; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:0.12em; color:var(--text-dim); margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .exp-label-dot { width:5px; height:5px; border-radius:50%; }
+  .exp-title { font-family:'DM Serif Display',serif; font-size:26px; font-weight:400; line-height:1.2; letter-spacing:-0.01em; margin-bottom:12px; }
+  .exp-desc { font-size:14px; color:var(--text-muted); line-height:1.7; margin-bottom:24px; max-width:320px; }
+
+  /* Goal graph */
+  .goal-tree { display:flex; flex-direction:column; align-items:center; gap:0; padding-top:8px; }
+  .gt-node {
+    background:rgba(123,108,255,0.12); border:1px solid rgba(123,108,255,0.25);
+    border-radius:8px; padding:8px 14px; font-size:12px; font-weight:600;
+    color:var(--text); white-space:nowrap; text-align:center;
+    position:relative; z-index:2; transition:all 0.25s;
+  }
+  .gt-node:hover { background:rgba(123,108,255,0.22); transform:scale(1.04); }
+  .gt-root { background:rgba(123,108,255,0.18); border-color:rgba(123,108,255,0.4); font-size:13px; }
+  .gt-conn { width:1px; height:18px; background:rgba(123,108,255,0.3); margin:0 auto; }
+  .gt-row { display:flex; gap:10px; align-items:flex-start; }
+  .gt-branch { display:flex; flex-direction:column; align-items:center; }
+  .gt-sub { background:var(--surface2); border-color:var(--border-mid); font-size:11px; }
+  .gt-sub-row { display:flex; gap:8px; align-items:flex-start; }
+  .gt-sub-branch { display:flex; flex-direction:column; align-items:center; }
+  .gt-leaf {
+    background:var(--bg); border:1px solid var(--border);
+    border-radius:6px; padding:5px 10px; font-size:10px; font-weight:500;
+    color:var(--text-muted); white-space:nowrap;
+  }
+
+  /* Signal feed mini */
+  .signal-feed-mini { display:flex; flex-direction:column; gap:8px; width:100%; }
+  .sfm-row {
+    display:flex; align-items:center; gap:10px;
+    background:var(--bg2); border:1px solid var(--border);
+    border-radius:8px; padding:10px 14px; transition:all 0.25s;
+  }
+  .sfm-row:hover { border-color:var(--border-mid); }
+  .sfm-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .sfm-text { flex:1; font-size:12px; color:var(--text-muted); }
+  .sfm-tag { font-family:'DM Mono',monospace; font-size:10px; padding:2px 8px; border-radius:4px; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; flex-shrink:0; }
+
+  /* Decision timeline */
+  .dtl { display:flex; flex-direction:column; gap:0; position:relative; padding-left:20px; }
+  .dtl::before {
+    content:''; position:absolute; left:6px; top:8px; bottom:8px; width:1px;
+    background:linear-gradient(to bottom, rgba(123,108,255,0.4), rgba(123,108,255,0.04));
+  }
+  .dtl-item { display:flex; align-items:flex-start; gap:14px; padding:12px 0; position:relative; }
+  .dtl-dot {
+    width:13px; height:13px; border-radius:50%; border:2px solid rgba(123,108,255,0.5);
+    background:rgba(123,108,255,0.2); flex-shrink:0; margin-top:2px; margin-left:-20px; position:relative; z-index:2;
+  }
+  .dtl-dot-active { background:var(--accent); border-color:var(--accent2); }
+  .dtl-date { font-family:'DM Mono',monospace; font-size:10px; color:var(--text-dim); margin-bottom:3px; }
+  .dtl-decision { font-size:12.5px; color:var(--text); font-weight:600; margin-bottom:2px; }
+  .dtl-reason { font-size:11.5px; color:var(--text-muted); line-height:1.5; }
+
+  /* Galaxy */
+  .galaxy-visual { flex:1; position:relative; min-height:200px; overflow:hidden; }
+
+  /* ═══════════════════════════════════════
+     SIGNAL ENGINE
+  ═══════════════════════════════════════ */
+  #signal { text-align:center; padding:148px 24px; position:relative; overflow:hidden; }
+  #signal::before {
+    content:''; position:absolute; width:900px; height:900px; border-radius:50%;
+    background:radial-gradient(circle, rgba(123,108,255,0.05) 0%, transparent 70%);
+    top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;
+  }
+  .signal-breakthrough {
+    max-width:620px; margin:0 auto 68px; padding:32px 40px;
+    background:var(--signal-surface); border:1px solid var(--signal-border);
+    border-radius:16px; position:relative; z-index:2;
+    transition: background 0.35s, border-color 0.35s;
+  }
+  .sbt-marker {
+    font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--accent2); margin-bottom:14px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .sbt-title {
+    font-family:'DM Serif Display',serif; font-size:22px; font-weight:400;
+    line-height:1.25; color:var(--text); margin-bottom:12px; letter-spacing:-0.01em;
+  }
+  .sbt-body { font-size:14.5px; color:var(--text-muted); line-height:1.72; }
+  .signal-examples { display:flex; flex-direction:column; gap:16px; max-width:700px; margin:0 auto; position:relative; z-index:2; }
+  .signal-item {
+    background:var(--surface-s); border:1px solid var(--border); border-radius:14px;
+    padding:22px 26px; display:flex; align-items:flex-start; gap:16px; text-align:left;
+    transition:all 0.3s; opacity:0; transform:translateY(10px); animation:signal-appear 0.5s ease both;
+  }
+  .signal-item:nth-child(1){animation-delay:0.1s;}
+  .signal-item:nth-child(2){animation-delay:0.22s;}
+  .signal-item:nth-child(3){animation-delay:0.34s;}
+  .signal-item:nth-child(4){animation-delay:0.46s;}
+  .signal-item:nth-child(5){animation-delay:0.58s;}
+  @keyframes signal-appear { to { opacity:1; transform:translateY(0); } }
+  .signal-item:hover { border-color:var(--border-mid); transform:translateY(-2px); box-shadow:0 10px 36px rgba(0,0,0,0.18); }
+  .signal-type { width:33px; height:33px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .signal-type-risk   { background:rgba(248,113,113,0.13); }
+  .signal-type-gap    { background:rgba(228,184,122,0.13); }
+  .signal-type-align  { background:rgba(52,211,153,0.13); }
+  .signal-type-insight{ background:rgba(123,108,255,0.13); }
+  .signal-content { flex:1; }
+  .signal-label { font-family:'DM Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-dim); margin-bottom:5px; }
+  .signal-text { font-size:14px; color:var(--text); font-weight:500; line-height:1.55; }
+  .signal-meta { font-size:11.5px; color:var(--text-dim); margin-top:5px; font-family:'DM Mono',monospace; }
+  .signal-badge { padding:3px 10px; border-radius:100px; font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; align-self:flex-start; flex-shrink:0; }
+  .badge-risk    { background:rgba(248,113,113,0.13); color:var(--red);    border:1px solid rgba(248,113,113,0.2); }
+  .badge-gap     { background:rgba(228,184,122,0.11); color:var(--gold);   border:1px solid rgba(228,184,122,0.2); }
+  .badge-align   { background:rgba(52,211,153,0.11);  color:var(--green);  border:1px solid rgba(52,211,153,0.2); }
+  .badge-insight { background:rgba(123,108,255,0.11); color:var(--accent2);border:1px solid rgba(123,108,255,0.2); }
+
+  /* ═══════════════════════════════════════
+     COMPARE
+  ═══════════════════════════════════════ */
+  #compare {
+    background:var(--bg2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+    padding:128px 24px; transition: background 0.35s;
+  }
+  .compare-wrapper { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:64px; border-radius:20px; overflow:hidden; border:1px solid var(--border); }
+  .compare-col { padding:50px; background:var(--surface-s); transition: background 0.35s; }
+  .compare-col-after { background:var(--compare-after); border-left:1px solid rgba(123,108,255,0.18); }
+  .compare-label { font-family:'DM Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-dim); margin-bottom:30px; display:flex; align-items:center; gap:8px; }
+  .compare-label-dot { width:6px; height:6px; border-radius:50%; }
+  .compare-item { display:flex; align-items:flex-start; gap:14px; padding:16px 0; border-bottom:1px solid var(--border); font-size:14px; line-height:1.58; }
+  .compare-item:last-child { border-bottom:none; }
+  .ci-icon { font-size:17px; flex-shrink:0; margin-top:2px; }
+  .ci-text      { color:var(--text-muted); }
+  .ci-text-good { color:var(--text); }
+
+  /* ═══════════════════════════════════════
+     APPLICATIONS
+  ═══════════════════════════════════════ */
+  #applications { padding:148px 24px; }
+  .apps-platform-note {
+    display:inline-flex; align-items:center; gap:8px; margin-top:20px;
+    font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim);
+    letter-spacing:0.07em; border-left:2px solid rgba(123,108,255,0.3); padding-left:14px;
+  }
+  .apps-platform-note strong { color:var(--accent2); font-weight:500; }
+  .apps-tabs { display:flex; gap:4px; background:var(--surface-s); border:1px solid var(--border); border-radius:12px; padding:4px; max-width:fit-content; margin-top:44px; transition: background 0.35s; }
+  .app-tab { padding:10px 24px; border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer; border:none; background:transparent; color:var(--text-muted); font-family:'Syne',sans-serif; transition:all 0.2s; letter-spacing:0.01em; }
+  .app-tab.active { background:var(--accent); color:#fff; box-shadow:0 4px 14px rgba(123,108,255,0.3); }
+  .app-tab:hover:not(.active) { color:var(--text); background:rgba(123,108,255,0.08); }
+  .app-panel { display:none; grid-template-columns:1fr 1fr; gap:44px; align-items:start; margin-top:52px; }
+  .app-panel.active { display:grid; }
+  .app-industry { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent2); margin-bottom:16px; }
+  .app-title { font-family:'DM Serif Display',serif; font-size:34px; line-height:1.15; margin-bottom:20px; letter-spacing:-0.015em; }
+  .app-desc { color:var(--text-muted); font-size:16px; line-height:1.78; margin-bottom:32px; }
+  .app-use-cases { display:flex; flex-direction:column; gap:12px; }
+  .app-use { display:flex; align-items:center; gap:12px; font-size:14px; color:var(--text-muted); }
+  .app-use::before { content:'→'; color:var(--accent2); font-family:'DM Mono',monospace; flex-shrink:0; }
+  .app-mockup { background:var(--surface-s); border:1px solid var(--border); border-radius:18px; padding:28px; overflow:hidden; transition:all 0.3s; }
+  .app-mockup:hover { border-color:var(--border-mid); box-shadow:0 16px 44px rgba(0,0,0,0.15); }
+  .mockup-header { display:flex; align-items:center; gap:8px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  .mockup-dots { display:flex; gap:5px; }
+  .dot { width:8px; height:8px; border-radius:50%; background:var(--border-bright); }
+  .mockup-title { font-size:11.5px; color:var(--text-dim); font-family:'DM Mono',monospace; flex:1; text-align:center; }
+  .mockup-content { display:flex; flex-direction:column; gap:9px; }
+  .mockup-row { background:var(--mockup-bg); border:1px solid var(--border); border-radius:8px; padding:11px 14px; display:flex; align-items:center; gap:12px; transition:border-color 0.2s; }
+  .mockup-row:hover { border-color:var(--border-mid); }
+  .mockup-label { font-size:12px; color:var(--text-muted); flex:1; }
+  .mockup-status { font-size:10px; font-family:'DM Mono',monospace; padding:3px 8px; border-radius:4px; font-weight:600; letter-spacing:0.04em; }
+  .status-alert { background:rgba(248,113,113,0.13); color:var(--red); }
+  .status-ok    { background:rgba(52,211,153,0.11);  color:var(--green); }
+  .status-watch { background:rgba(228,184,122,0.11); color:var(--gold); }
+
+  /* ═══════════════════════════════════════
+     POSITIONING
+  ═══════════════════════════════════════ */
+  #positioning { padding:148px 24px; text-align:center; background:var(--bg2); border-top:1px solid var(--border); transition: background 0.35s; }
+  .never-existed {
+    margin-top:36px; margin-bottom:0;
+    font-family:'DM Serif Display',serif; font-size:clamp(16px,1.8vw,20px);
+    font-style:italic; color:var(--text-dim); letter-spacing:-0.01em;
+  }
+  .category-statement {
+    max-width:660px; margin:36px auto 0; padding:26px 34px;
+    border:1px solid var(--border-mid); border-radius:14px;
+    font-family:'DM Serif Display',serif; font-size:clamp(18px,2.2vw,24px);
+    font-weight:400; line-height:1.45; letter-spacing:-0.01em; color:var(--text);
+    background:var(--category-bg); transition: background 0.35s;
+  }
+  .category-statement em { font-style:italic; color:var(--accent2); }
+  .positioning-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:56px; border-radius:20px; overflow:hidden; border:1px solid var(--border); }
+  .pos-card { background:var(--surface-s); padding:44px 40px; text-align:left; transition:background 0.3s; cursor:default; }
+  .pos-card:hover { background:var(--surface2); }
+  .pos-tag { display:inline-block; background:rgba(123,108,255,0.09); border:1px solid rgba(123,108,255,0.18); border-radius:5px; padding:4px 11px; font-size:11px; font-weight:600; color:var(--accent2); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:20px; }
+  .pos-title { font-family:'DM Serif Display',serif; font-size:23px; margin-bottom:14px; line-height:1.2; letter-spacing:-0.01em; }
+  .pos-body { color:var(--text-muted); font-size:14px; line-height:1.72; }
+
+  /* ═══════════════════════════════════════
+     CTA
+  ═══════════════════════════════════════ */
+  #cta { padding:168px 24px; text-align:center; position:relative; overflow:hidden; }
+  #cta::before {
+    content:''; position:absolute; width:1000px; height:560px; border-radius:50%;
+    background:radial-gradient(ellipse, rgba(123,108,255,0.08) 0%, transparent 70%);
+    top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none;
+  }
+  .cta-super { font-family:'DM Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.14em; color:var(--text-dim); margin-bottom:26px; }
+  .cta-title { font-family:'DM Serif Display',serif; font-size:clamp(44px,6vw,70px); font-weight:400; line-height:1.06; letter-spacing:-0.022em; margin-bottom:28px; position:relative; z-index:2; }
+  .cta-sub { color:var(--text-muted); font-size:18px; max-width:460px; margin:0 auto 48px; line-height:1.75; position:relative; z-index:2; }
+  .cta-actions { display:flex; justify-content:center; gap:14px; position:relative; z-index:2; }
+
+  /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+  footer {
+    border-top:1px solid var(--border); padding:48px 52px;
+    display:flex; align-items:center; justify-content:space-between;
+    background:var(--footer-bg); transition: background 0.35s;
+  }
+  .footer-left { display:flex; flex-direction:column; gap:8px; }
+  .footer-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; color:var(--text); letter-spacing:-0.4px; display:flex; align-items:center; gap:9px; }
+  .footer-copy { font-size:12.5px; color:var(--text-dim); }
+  .footer-links { display:flex; gap:28px; }
+  .footer-links a { font-size:13px; color:var(--text-dim); text-decoration:none; transition:color 0.2s; }
+  .footer-links a:hover { color:var(--text-muted); }
+
+  /* ═══════════════════════════════════════
+     SCROLL REVEAL
+  ═══════════════════════════════════════ */
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+  .reveal-stagger > * { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease, transform 0.6s ease; }
+  .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0s; }
+  .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.08s; }
+  .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.16s; }
+  .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.24s; }
+  .lift { transition:transform 0.3s ease, box-shadow 0.3s ease; }
+  .lift:hover { transform:translateY(-4px); box-shadow:0 22px 52px rgba(0,0,0,0.22); }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+  @media (max-width:960px) {
+    nav { padding:16px 24px; }
+    .nav-links { display:none; }
+    .problem-grid, .compare-wrapper, .app-panel { grid-template-columns:1fr; }
+    .systems-grid { grid-template-columns:1fr; }
+    .positioning-grid { grid-template-columns:1fr; }
+    .exp-views { grid-template-columns:1fr; }
+    .exp-card-wide { flex-direction:column; min-height:auto; }
+    .compare-col-after { border-left:none; border-top:1px solid rgba(123,108,255,0.18); }
+    footer { flex-direction:column; gap:24px; text-align:center; padding:36px 24px; }
+    .footer-links { flex-wrap:wrap; justify-content:center; }
+  }
+
+  /* Light mode overrides for lv-row kempx glow */
+  [data-theme="light"] .lv-row-kempx {
+    box-shadow:0 0 60px rgba(123,108,255,0.12), 0 0 0 1px rgba(123,108,255,0.12);
+  }
+  [data-theme="light"] .layer-kempx {
+    box-shadow:0 0 40px rgba(123,108,255,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+  [data-theme="light"] #signal::before {
+    background:radial-gradient(circle, rgba(123,108,255,0.04) 0%, transparent 70%);
+  }
+  /* ═══════════════════════════════════════
+     SO-WHAT MOMENT
+  ═══════════════════════════════════════ */
+  .so-what-moment {
+    margin-top: 40px;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, rgba(123,108,255,0.08), rgba(56,189,248,0.04));
+    border: 1px solid rgba(123,108,255,0.22);
+    border-radius: 16px;
+    position: relative;
+  }
+  .so-what-moment::before {
+    content: '"';
+    position: absolute;
+    top: -14px; left: 24px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 64px;
+    color: var(--accent);
+    opacity: 0.35;
+    line-height: 1;
+  }
+  .swm-quote {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.65;
+    letter-spacing: -0.01em;
+  }
+
+  /* ═══════════════════════════════════════
+     BLIND STACK CONTRAST
+  ═══════════════════════════════════════ */
+  .blind-stack-contrast {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    max-width: 860px;
+    margin: 44px auto 36px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .bsc-col { padding: 32px 28px; display: flex; flex-direction: column; gap: 16px; }
+  .bsc-without { background: var(--surface-s); }
+  .bsc-with { background: linear-gradient(135deg, rgba(123,108,255,0.1), rgba(56,189,248,0.04)); }
+  .bsc-divider { width: 1px; background: var(--border); }
+  .bsc-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 4px;
+  }
+  .bsc-without .bsc-label { color: rgba(248,113,113,0.6); }
+  .bsc-with .bsc-label { color: var(--accent2); }
+  .bsc-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 13px; line-height: 1.6; color: var(--text-muted);
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.2s;
+  }
+  .bsc-item:hover { border-color: var(--border-mid); }
+  .bsc-dim { opacity: 0.65; }
+  .bsc-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .bsc-verdict {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    color: rgba(248,113,113,0.7);
+    margin-top: 4px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .bsc-verdict-on { color: var(--green); }
+  @media (max-width: 700px) {
+    .blind-stack-contrast { grid-template-columns: 1fr; }
+    .bsc-divider { width: 100%; height: 1px; }
+  }
+
+  /* ═══════════════════════════════════════
+     INTERACTIVE KIL DEMO
+  ═══════════════════════════════════════ */
+  #demo {
+    padding: 148px 24px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.35s;
+  }
+  .demo-intro { margin-bottom: 56px; }
+  .demo-scenario-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(123,108,255,0.1); border: 1px solid rgba(123,108,255,0.22);
+    border-radius: 8px; padding: 7px 16px; margin-bottom: 20px;
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent2);
+  }
+  .demo-scenario-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  /* Demo shell */
+  .demo-shell {
+    background: var(--surface-s);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+    transition: background 0.35s, border-color 0.35s;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  /* Demo top bar */
+  .demo-topbar {
+    display: flex; align-items: center; gap: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+  }
+  .demo-tab {
+    flex: 1; padding: 14px 0; text-align: center;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-dim); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .demo-tab:last-child { border-right: none; }
+  .demo-tab:hover { color: var(--text-muted); background: rgba(123,108,255,0.04); }
+  .demo-tab.demo-tab-active {
+    color: var(--accent2); border-bottom-color: var(--accent);
+    background: rgba(123,108,255,0.06);
+  }
+  .demo-tab-icon { margin-right: 6px; }
+
+  /* Demo context banner */
+  .demo-context {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 24px;
+    background: rgba(123,108,255,0.05);
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim);
+    gap: 16px; flex-wrap: wrap;
+  }
+  .demo-context-item { display: flex; align-items: center; gap: 6px; }
+  .demo-context-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent2); }
+
+  /* Demo panels */
+  .demo-panel { display: none; min-height: 520px; }
+  .demo-panel.demo-panel-active { display: block; }
+
+  /* ── Goal Graph Panel ── */
+  .demo-gg {
+    padding: 32px;
+    display: flex; flex-direction: column; align-items: center; gap: 0;
+  }
+  .demo-gg-root {
+    background: linear-gradient(135deg, rgba(123,108,255,0.18), rgba(56,189,248,0.08));
+    border: 1px solid rgba(123,108,255,0.4);
+    border-radius: 12px; padding: 14px 24px;
+    font-size: 14px; font-weight: 700; color: var(--text);
+    text-align: center; cursor: pointer;
+    transition: all 0.25s; position: relative;
+    box-shadow: 0 0 32px rgba(123,108,255,0.15);
+  }
+  .demo-gg-root:hover { transform: scale(1.03); box-shadow: 0 0 48px rgba(123,108,255,0.25); }
+  .demo-gg-root-meta {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--accent2); margin-top: 3px; font-weight: 400;
+  }
+  .demo-gg-conn { width: 1px; height: 28px; background: linear-gradient(to bottom, rgba(123,108,255,0.5), rgba(123,108,255,0.15)); }
+  .demo-gg-row { display: flex; gap: 12px; align-items: flex-start; justify-content: center; width: 100%; }
+  .demo-gg-branch { display: flex; flex-direction: column; align-items: center; flex: 1; max-width: 220px; }
+  .demo-gg-node {
+    width: 100%;
+    border: 1px solid var(--border-mid);
+    border-radius: 10px; padding: 11px 14px;
+    font-size: 13px; font-weight: 600; color: var(--text);
+    text-align: center; cursor: pointer;
+    transition: all 0.25s;
+    background: var(--surface2);
+    position: relative;
+  }
+  .demo-gg-node:hover { border-color: var(--accent); background: rgba(123,108,255,0.1); transform: translateY(-2px); }
+  .demo-gg-node.flagged { border-color: rgba(248,113,113,0.45); background: rgba(248,113,113,0.07); }
+  .demo-gg-node.on-track { border-color: rgba(52,211,153,0.45); background: rgba(52,211,153,0.07); }
+  .demo-gg-node.watch { border-color: rgba(228,184,122,0.45); background: rgba(228,184,122,0.07); }
+  .demo-gg-status {
+    font-family: 'DM Mono', monospace; font-size: 9.5px;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px;
+  }
+  .demo-gg-leaves { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; width: 100%; }
+  .demo-gg-leaf {
+    font-size: 11.5px; font-family: 'DM Mono', monospace;
+    color: var(--text-muted); padding: 6px 10px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 7px; text-align: left; cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .demo-gg-leaf:hover { border-color: var(--border-mid); color: var(--text); }
+  .demo-gg-leaf.leaf-risk { border-color: rgba(248,113,113,0.3); color: var(--red); }
+  .demo-gg-leaf.leaf-ok { border-color: rgba(52,211,153,0.3); color: var(--green); }
+
+  /* ── Signal Feed Panel ── */
+  .demo-sf { padding: 28px 32px; }
+  .demo-sf-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .demo-sf-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .demo-sf-live {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--green); letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .demo-sf-live-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+  .demo-signal-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px;
+    margin-bottom: 12px;
+    display: flex; align-items: flex-start; gap: 14px;
+    cursor: pointer; transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .demo-signal-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+  .demo-signal-card.sig-risk::before { background: var(--red); }
+  .demo-signal-card.sig-gap::before  { background: var(--gold); }
+  .demo-signal-card.sig-align::before { background: var(--accent2); }
+  .demo-signal-card.sig-insight::before { background: var(--green); }
+  .demo-signal-card:hover { border-color: var(--border-mid); transform: translateX(3px); box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+  .demo-signal-card.sig-expanded { border-color: var(--border-mid); background: var(--surface2); }
+  .demo-sig-icon { font-size: 20px; flex-shrink: 0; }
+  .demo-sig-body { flex: 1; }
+  .demo-sig-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px; }
+  .demo-sig-type {
+    font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .sig-risk .demo-sig-type  { color: var(--red); }
+  .sig-gap .demo-sig-type   { color: var(--gold); }
+  .sig-align .demo-sig-type { color: var(--accent2); }
+  .sig-insight .demo-sig-type { color: var(--green); }
+  .demo-sig-time { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); }
+  .demo-sig-text { font-size: 13.5px; color: var(--text); font-weight: 500; line-height: 1.55; }
+  .demo-sig-source { font-family: 'DM Mono', monospace; font-size: 10.5px; color: var(--text-dim); margin-top: 5px; }
+  .demo-sig-expand {
+    max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s;
+    opacity: 0;
+  }
+  .demo-sig-expand.open { max-height: 160px; opacity: 1; }
+  .demo-sig-detail {
+    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--text-muted); line-height: 1.65;
+  }
+  .demo-sig-action {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 10px; padding: 6px 14px; border-radius: 7px;
+    background: rgba(123,108,255,0.12); border: 1px solid rgba(123,108,255,0.22);
+    font-size: 12px; font-weight: 600; color: var(--accent2);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .demo-sig-action:hover { background: rgba(123,108,255,0.22); }
+  .demo-sig-chevron {
+    width: 18px; height: 18px; flex-shrink: 0; color: var(--text-dim);
+    transition: transform 0.3s; margin-top: 2px;
+  }
+  .demo-signal-card.sig-expanded .demo-sig-chevron { transform: rotate(180deg); }
+
+  /* ── Decision Timeline Panel ── */
+  .demo-dt { padding: 28px 32px; }
+  .demo-dt-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .demo-dt-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .demo-dt-count {
+    font-family: 'DM Mono', monospace; font-size: 10.5px;
+    color: var(--text-dim); letter-spacing: 0.06em;
+  }
+  .demo-timeline { position: relative; padding-left: 28px; }
+  .demo-timeline::before {
+    content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, rgba(123,108,255,0.5), rgba(123,108,255,0.05));
+  }
+  .demo-dt-item {
+    display: flex; flex-direction: column; margin-bottom: 0;
+    padding: 14px 0; position: relative; cursor: pointer;
+    border-bottom: 1px solid var(--border);
+  }
+  .demo-dt-item:last-child { border-bottom: none; }
+  .demo-dt-dot {
+    position: absolute; left: -21px; top: 18px;
+    width: 13px; height: 13px; border-radius: 50%;
+    border: 2px solid rgba(123,108,255,0.4); background: var(--bg2);
+    transition: all 0.25s; z-index: 2;
+  }
+  .demo-dt-item:hover .demo-dt-dot { border-color: var(--accent); background: rgba(123,108,255,0.25); transform: scale(1.2); }
+  .demo-dt-item.dt-active .demo-dt-dot { background: var(--accent); border-color: var(--accent2); box-shadow: 0 0 12px rgba(123,108,255,0.5); }
+  .demo-dt-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .demo-dt-main { flex: 1; }
+  .demo-dt-date {
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px;
+  }
+  .demo-dt-decision { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .demo-dt-reason { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+  .demo-dt-tag {
+    font-family: 'DM Mono', monospace; font-size: 9.5px; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase; padding: 3px 8px;
+    border-radius: 5px; white-space: nowrap; flex-shrink: 0;
+  }
+  .tag-paused { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .tag-active { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.2); }
+  .tag-watch  { background: rgba(228,184,122,0.12); color: var(--gold); border: 1px solid rgba(228,184,122,0.2); }
+  .tag-board  { background: rgba(123,108,255,0.12); color: var(--accent2); border: 1px solid rgba(123,108,255,0.2); }
+  .demo-dt-linked {
+    max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s; opacity: 0;
+    margin-top: 0;
+  }
+  .demo-dt-linked.open { max-height: 100px; opacity: 1; margin-top: 12px; }
+  .demo-dt-link-row {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    background: rgba(123,108,255,0.06); border: 1px solid rgba(123,108,255,0.15);
+    border-radius: 8px; font-size: 12px; color: var(--text-muted);
+    cursor: pointer; transition: all 0.2s; margin-bottom: 6px;
+  }
+  .demo-dt-link-row:hover { background: rgba(123,108,255,0.12); color: var(--text); }
+  .demo-dt-link-icon { font-size: 13px; flex-shrink: 0; }
+  .demo-dt-link-label { flex: 1; }
+  .demo-dt-link-badge { font-family: 'DM Mono', monospace; font-size: 9.5px; color: var(--accent2); }
+
+  /* ── Knowledge Map Panel ── */
+  .demo-km { padding: 28px 32px; }
+  .demo-km-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border);
+  }
+  .demo-km-canvas { position: relative; height: 360px; overflow: hidden; background: var(--bg); border-radius: 12px; border: 1px solid var(--border); }
+  .demo-km-tooltip {
+    position: absolute; background: var(--surface2); border: 1px solid var(--border-mid);
+    border-radius: 10px; padding: 12px 16px; font-size: 12.5px; color: var(--text);
+    pointer-events: none; opacity: 0; transition: opacity 0.2s;
+    z-index: 10; max-width: 240px; line-height: 1.55;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .demo-km-tooltip.visible { opacity: 1; }
+  .demo-km-tip-title { font-weight: 700; margin-bottom: 4px; }
+  .demo-km-tip-meta { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); }
+
+  /* Demo instruction */
+  .demo-instruction {
+    text-align: center; margin-top: 24px;
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+  .demo-instruction span { color: var(--accent2); }
+
+  [data-theme="light"] .demo-shell { box-shadow: 0 32px 80px rgba(0,0,0,0.1); }
+  [data-theme="light"] .demo-signal-card { background: var(--bg2); }
+  [data-theme="light"] .demo-km-canvas { background: var(--bg2); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">K</div>
+    <span class="nav-wordmark">KempX</span>
+    <span class="nav-layer-tag">Intelligence Layer</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#experience">Product</a></li>
+    <li><a href="#demo">Live Demo</a></li>
+    <li><a href="#signal">Signal Engine</a></li>
+    <li><a href="#applications">Applications</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+    </button>
+    <a href="#cta" class="nav-cta">Request Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-canvas">
+    <div class="hero-grid"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
+  </div>
+
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Introducing the KempX Intelligence Layer
+  </div>
+
+  <h1>The intelligence layer<br>above your <em>digital world.</em></h1>
+
+  <p class="hero-sub">
+    KempX is a persistent intelligence environment that sits above your AI models and software tools — structuring context, understanding goals, tracking decisions, and surfacing what matters before it's too late.
+  </p>
+
+  <p class="hero-layer-reinforce">
+    Not a tool. Not a model. &nbsp;·&nbsp; <span>A new layer in the stack.</span>
+  </p>
+
+  <div class="hero-actions">
+    <a href="#cta" class="btn-primary">Request Early Access →</a>
+    <a href="#how" class="btn-ghost">See how it works</a>
+  </div>
+
+  <p class="hero-layer-reinforce" style="margin-top:48px; margin-bottom:0; animation:fade-up 0.85s 0.38s ease both;">
+    This is how it sits within your stack.
+  </p>
+
+  <div class="hero-diagram">
+    <div class="layer-stack">
+      <div class="layer-item layer-kempx lift" style="border-radius:16px;">
+        <div class="layer-icon" style="background:rgba(123,108,255,0.15); border:1px solid rgba(123,108,255,0.28);">⬡</div>
+        <div>
+          <div style="color:var(--text); font-size:15px; font-weight:700; margin-bottom:5px;">KempX Intelligence Layer</div>
+          <div style="font-size:11.5px; color:var(--text-muted); font-family:'DM Mono',monospace;">Goal Graph &nbsp;·&nbsp; Knowledge Map &nbsp;·&nbsp; Decision Memory &nbsp;·&nbsp; Signal Engine</div>
+        </div>
+        <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--accent2); text-transform:uppercase; letter-spacing:0.1em; white-space:nowrap; background:rgba(123,108,255,0.1); border:1px solid rgba(123,108,255,0.2); padding:4px 10px; border-radius:5px;">Active</div>
+      </div>
+      <div class="layer-connector"></div>
+      <div class="layer-item lift">
+        <div class="layer-icon" style="background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.15);">🤖</div>
+        <div class="layer-label">AI Models</div>
+        <div class="layer-tools">
+          <span class="layer-tag">GPT-4o</span><span class="layer-tag">Claude</span><span class="layer-tag">Gemini</span><span class="layer-tag">Llama</span>
+        </div>
+      </div>
+      <div class="layer-connector"></div>
+      <div class="layer-item lift">
+        <div class="layer-icon" style="background:rgba(228,184,122,0.08); border:1px solid rgba(228,184,122,0.15);">🔧</div>
+        <div class="layer-label">Software Tools</div>
+        <div class="layer-tools">
+          <span class="layer-tag">Notion</span><span class="layer-tag">Slack</span><span class="layer-tag">Salesforce</span><span class="layer-tag">Drive</span><span class="layer-tag">Jira</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div>
+        <p class="section-eyebrow reveal">The problem</p>
+        <h2 class="section-title reveal">Everything is<br>fragmented.</h2>
+        <p class="section-body reveal">
+          Your tools don't talk. Your AI doesn't remember. Your decisions disappear into threads and documents no one reads again. Every system is isolated, every insight is lost, every goal lives in someone's head.
+        </p>
+        <p class="section-body reveal" style="margin-top:20px;">
+          The result: organisations make the same mistakes twice, move slower than they should, and never have a complete picture of where they are or what they need to decide next.
+        </p>
+        <p class="hero-layer-reinforce reveal" style="margin-top:28px; justify-content:flex-start;">
+          The KempX Intelligence Layer exists to solve this at the system level.
+        </p>
+        <p class="problem-bridge reveal">
+          What's missing isn't another tool.<br><strong>It's a layer.</strong>
+        </p>
+
+        <div class="so-what-moment reveal">
+          <div class="swm-quote">
+            "Right now, somewhere in your organisation, a decision is being made that contradicts a decision made six months ago. Nobody knows. KempX would have caught it three weeks before it cost you."
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="chaos-visual reveal" id="chaosViz"></div>
+        <div class="problem-stats">
+          <div class="stat-item reveal">
+            <div class="stat-number">73%</div>
+            <div class="stat-label">of strategic decisions are made without access to the relevant prior context or reasoning</div>
+          </div>
+          <div class="stat-item reveal">
+            <div class="stat-number">12+</div>
+            <div class="stat-label">disconnected tools the average knowledge worker navigates daily, none aware of the others</div>
+          </div>
+          <div class="stat-item reveal">
+            <div class="stat-number">0</div>
+            <div class="stat-label">systems in existence today that understand your goals, connect your tools, and remember your decisions — until now</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE LAYER -->
+<section id="layer">
+  <div class="container" style="text-align:center;">
+    <p class="section-eyebrow reveal">What KempX is</p>
+    <h2 class="section-title reveal">The KempX<br>Intelligence Layer.</h2>
+    <p class="section-body reveal" style="margin:0 auto 20px;">
+      Not a tool inside your workflow. Not another dashboard. KempX sits <em style="font-style:italic; color:var(--text);">above</em> your entire stack — connecting, understanding, and orchestrating everything beneath it with persistent intelligence.
+    </p>
+    <p class="reveal" style="font-family:'DM Serif Display',serif; font-size:clamp(17px,1.8vw,21px); font-style:italic; color:var(--text-muted); letter-spacing:-0.01em; margin:0 auto 22px; max-width:560px;">
+      It doesn't sit inside your tools. It sits above them.
+    </p>
+
+    <div class="blind-stack-contrast reveal">
+      <div class="bsc-col bsc-without">
+        <div class="bsc-label">Without Layer 3</div>
+        <div class="bsc-item bsc-dim"><span class="bsc-icon">🤖</span><span>Your AI has no memory of your organisation's goals or past decisions. It answers questions. It understands nothing.</span></div>
+        <div class="bsc-item bsc-dim"><span class="bsc-icon">🔧</span><span>Your tools execute tasks in isolation. They don't know what you're trying to achieve or why.</span></div>
+        <div class="bsc-verdict">Both layers are working blind.</div>
+      </div>
+      <div class="bsc-divider"></div>
+      <div class="bsc-col bsc-with">
+        <div class="bsc-label">With the KempX Intelligence Layer</div>
+        <div class="bsc-item"><span class="bsc-icon">🤖</span><span>Every AI model operates with your full organisational context — goals, history, decisions, gaps. It knows the organisation, not just the question.</span></div>
+        <div class="bsc-item"><span class="bsc-icon">🔧</span><span>Every tool is connected to a layer that understands why work is being done and whether it aligns with what was decided.</span></div>
+        <div class="bsc-verdict bsc-verdict-on">Both layers finally have the intelligence to help you.</div>
+      </div>
+    </div>
+
+    <p class="hero-layer-reinforce reveal" style="justify-content:center;">
+      Layer 1: Execution &nbsp;·&nbsp; Layer 2: AI Models &nbsp;·&nbsp; <span>Layer 3: KempX Intelligence</span>
+    </p>
+  </div>
+
+  <p class="no-stack-thinks reveal">
+    No existing software stack is designed to think.
+  </p>
+
+  <div class="layer-visual-full reveal" style="margin-top:40px;">
+    <div class="lv-row lv-row-kempx lift">
+      <div>
+        <div class="lv-label" style="font-size:17px; color:var(--text); margin-bottom:6px;">KempX Intelligence Layer</div>
+        <div class="lv-desc">Persistent Intelligence Environment — always-on, context-aware, proactive</div>
+        <div class="lv-benefits" style="margin-top:10px;">
+          <span class="lv-benefit">Goal Graph</span><span class="lv-benefit">Knowledge Map</span><span class="lv-benefit">Decision Memory</span><span class="lv-benefit">Signal Engine</span>
+        </div>
+      </div>
+      <div style="text-align:right; flex-shrink:0;">
+        <div style="font-size:10.5px; color:var(--accent2); font-family:'DM Mono',monospace; letter-spacing:0.09em; text-transform:uppercase; margin-bottom:6px;">Layer 3 — Intelligence</div>
+        <div style="font-size:11.5px; color:var(--text-dim); font-family:'DM Mono',monospace;">Above tools. Above models.</div>
+      </div>
+    </div>
+    <div class="lv-conn"></div>
+    <div class="lv-row lift" style="max-width:720px; margin:0 auto;">
+      <div>
+        <div class="lv-label" style="margin-bottom:5px;">AI Models</div>
+        <div class="lv-desc">GPT-4o &nbsp;·&nbsp; Claude &nbsp;·&nbsp; Gemini &nbsp;·&nbsp; Llama &nbsp;·&nbsp; Mistral &nbsp;·&nbsp; Custom</div>
+      </div>
+      <div style="font-size:10.5px; color:var(--text-dim); font-family:'DM Mono',monospace; letter-spacing:0.09em; text-transform:uppercase; flex-shrink:0;">Layer 2 — AI</div>
+    </div>
+    <div class="lv-conn lv-conn-bottom"></div>
+    <div class="lv-row lift" style="max-width:720px; margin:0 auto;">
+      <div>
+        <div class="lv-label" style="margin-bottom:5px;">Software Tools</div>
+        <div class="lv-desc">Notion &nbsp;·&nbsp; Slack &nbsp;·&nbsp; CRM &nbsp;·&nbsp; Drive &nbsp;·&nbsp; Jira &nbsp;·&nbsp; Email &nbsp;·&nbsp; Everything else</div>
+      </div>
+      <div style="font-size:10.5px; color:var(--text-dim); font-family:'DM Mono',monospace; letter-spacing:0.09em; text-transform:uppercase; flex-shrink:0;">Layer 1 — Execution</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <p class="section-eyebrow reveal">How it works</p>
+    <h2 class="section-title reveal">Four systems.<br>One intelligence.</h2>
+    <p class="section-body reveal">
+      The KempX Intelligence Layer operates through four interconnected systems that form a complete, persistent intelligence environment — not a feature set, but a new class of infrastructure.
+    </p>
+    <p class="reveal" style="margin-top:28px; font-family:'DM Mono',monospace; font-size:11.5px; color:var(--text-dim); letter-spacing:0.06em; max-width:560px;">
+      Everything KempX does comes from four core systems.
+    </p>
+
+    <div class="systems-grid reveal">
+      <div class="system-card card-v1" onmousemove="handleCardGlow(event,this)">
+        <div class="system-number">01 / 04</div>
+        <div class="system-icon-large">⬡</div>
+        <div class="system-title">Goal Graph</div>
+        <div class="system-desc">A dynamic, living map of what your organisation is trying to achieve — from high-level strategy to daily execution — connected and coherent at every level.</div>
+        <ul class="system-features">
+          <li>Understands objectives and sub-goals across the entire organisation</li>
+          <li>Connects decisions to outcomes automatically and continuously</li>
+          <li>Detects when actions misalign with stated strategic intent</li>
+          <li>Evolves as priorities shift — without manual updates</li>
+        </ul>
+      </div>
+      <div class="system-card card-v2" onmousemove="handleCardGlow(event,this)">
+        <div class="system-number">02 / 04</div>
+        <div class="system-icon-large">🌐</div>
+        <div class="system-title">Knowledge Map</div>
+        <div class="system-desc">Connects all your data, documents, tools, and systems into a unified semantic graph that understands relationships — not just files or search results.</div>
+        <ul class="system-features">
+          <li>Ingests from any tool: docs, CRM, Slack, Drive, email, code</li>
+          <li>Builds entity and relationship graphs automatically over time</li>
+          <li>Surfaces the right context at exactly the right moment</li>
+          <li>Eliminates duplicate knowledge, broken context, and silos</li>
+        </ul>
+      </div>
+      <div class="system-card card-v3" onmousemove="handleCardGlow(event,this)">
+        <div class="system-number">03 / 04</div>
+        <div class="system-icon-large">🧠</div>
+        <div class="system-title">Decision Memory</div>
+        <div class="system-desc">Every decision — and the reasoning behind it — is captured, structured, and made permanently retrievable across the organisation and across time.</div>
+        <ul class="system-features">
+          <li>Records every decision with full context and rationale</li>
+          <li>Links outcomes back to their originating decisions</li>
+          <li>Prevents the same mistakes from repeating across quarters</li>
+          <li>Enables true institutional memory and organisational learning</li>
+        </ul>
+      </div>
+      <div class="system-card card-v4" onmousemove="handleCardGlow(event,this)">
+        <div class="system-number">04 / 04</div>
+        <div class="system-icon-large">⚡</div>
+        <div class="system-title">Signal Engine</div>
+        <div class="system-desc">The intelligence that never sleeps. Continuously monitors for gaps, risks, misalignment, and missed opportunities — before they become expensive problems.</div>
+        <ul class="system-features">
+          <li>Proactive alerts, not reactive reports or dashboards</li>
+          <li>Detects strategic drift and goal misalignment in real time</li>
+          <li>Identifies missing context, knowledge gaps, and decision voids</li>
+          <li>Learns your risk tolerance and priority structure over time</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="exp-header">
+      <p class="section-eyebrow reveal">Product experience</p>
+      <h2 class="section-title reveal">Intelligence made<br>visible.</h2>
+      <p class="section-body reveal">
+        The KempX Intelligence Layer surfaces through four distinct views — each designed to make a different dimension of your organisation legible, navigable, and actionable.
+      </p>
+    </div>
+
+    <div class="exp-views reveal-stagger" id="expViews">
+
+      <!-- Knowledge Galaxy — full width -->
+      <div class="exp-card exp-card-wide exp-card-1 lift">
+        <div class="exp-card-glow"></div>
+        <div style="flex:0 0 380px; padding-right:44px; border-right:1px solid var(--border);">
+          <div class="exp-label">
+            <span class="exp-label-dot" style="background:var(--accent2);"></span>
+            Knowledge Galaxy
+          </div>
+          <div class="exp-title">Your entire knowledge universe — in one view.</div>
+          <div class="exp-desc">An interactive intelligence map of every document, decision, person, and concept across all your tools. Navigate your organisation's knowledge like a constellation.</div>
+          <div style="display:flex; flex-direction:column; gap:9px; margin-top:20px;">
+            <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-muted);">
+              <span style="color:var(--accent2); font-family:'DM Mono',monospace; font-size:11px;">→</span>
+              All knowledge sources connected in a single semantic graph
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-muted);">
+              <span style="color:var(--accent2); font-family:'DM Mono',monospace; font-size:11px;">→</span>
+              Click any node to see its connections, decisions, and history
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-muted);">
+              <span style="color:var(--accent2); font-family:'DM Mono',monospace; font-size:11px;">→</span>
+              Gaps in the map are surfaced as signals automatically
+            </div>
+          </div>
+        </div>
+        <div class="galaxy-visual" style="flex:1; min-height:280px; display:flex; align-items:center; justify-content:center; padding-left:44px;">
+          <svg id="galaxySvg" width="100%" height="260" viewBox="0 0 480 260" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+
+      <!-- Goal Graph -->
+      <div class="exp-card exp-card-2 lift">
+        <div class="exp-card-glow"></div>
+        <div>
+          <div class="exp-label"><span class="exp-label-dot" style="background:var(--accent3);"></span>Goal Graph</div>
+          <div class="exp-title">Strategy as a<br>connected structure.</div>
+          <div class="exp-desc">See exactly how every team, project, and task connects to your organisation's highest-level objectives — always up to date, always aligned.</div>
+        </div>
+        <div class="goal-tree" style="margin-top:24px;">
+          <div class="gt-node gt-root">Series B: $40M ARR by Dec 2025</div>
+          <div class="gt-conn"></div>
+          <div class="gt-row">
+            <div class="gt-branch">
+              <div class="gt-node gt-sub">Enterprise Sales</div>
+              <div class="gt-conn" style="height:14px;"></div>
+              <div class="gt-sub-row">
+                <div class="gt-sub-branch"><div class="gt-leaf">APAC Expansion</div></div>
+                <div class="gt-sub-branch"><div class="gt-leaf" style="border-color:rgba(248,113,113,0.3); color:var(--red);">EMEA Pipeline ↑</div></div>
+              </div>
+            </div>
+            <div style="width:1px; background:var(--border); margin:0 10px;"></div>
+            <div class="gt-branch">
+              <div class="gt-node gt-sub">Product NPS ≥ 55</div>
+              <div class="gt-conn" style="height:14px;"></div>
+              <div class="gt-sub-row">
+                <div class="gt-sub-branch"><div class="gt-leaf" style="border-color:rgba(52,211,153,0.3); color:var(--green);">Onboarding ✓</div></div>
+                <div class="gt-sub-branch"><div class="gt-leaf">API Latency</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signal Feed -->
+      <div class="exp-card exp-card-3 lift">
+        <div class="exp-card-glow"></div>
+        <div>
+          <div class="exp-label"><span class="exp-label-dot" style="background:var(--gold);"></span>Signal Feed</div>
+          <div class="exp-title">Proactive intelligence,<br>not reactive alerts.</div>
+          <div class="exp-desc">A live, prioritised feed of what the KempX Intelligence Layer has identified as critical — surfaced before you think to look.</div>
+        </div>
+        <div class="signal-feed-mini" style="margin-top:20px;">
+          <div class="sfm-row"><span class="sfm-dot" style="background:var(--red);"></span><span class="sfm-text">Q3 revenue trajectory is 11 points below target</span><span class="sfm-tag" style="background:rgba(248,113,113,0.12); color:var(--red);">Risk</span></div>
+          <div class="sfm-row"><span class="sfm-dot" style="background:var(--gold);"></span><span class="sfm-text">APAC regulatory gap — decision needed in 6 days</span><span class="sfm-tag" style="background:rgba(228,184,122,0.11); color:var(--gold);">Gap</span></div>
+          <div class="sfm-row"><span class="sfm-dot" style="background:var(--accent2);"></span><span class="sfm-text">3 teams flagged the same customer friction point</span><span class="sfm-tag" style="background:rgba(123,108,255,0.12); color:var(--accent2);">Pattern</span></div>
+          <div class="sfm-row"><span class="sfm-dot" style="background:var(--green);"></span><span class="sfm-text">Onboarding NPS recovery — target reached</span><span class="sfm-tag" style="background:rgba(52,211,153,0.11); color:var(--green);">Clear</span></div>
+        </div>
+      </div>
+
+      <!-- Decision Timeline -->
+      <div class="exp-card exp-card-4 lift">
+        <div class="exp-card-glow"></div>
+        <div>
+          <div class="exp-label"><span class="exp-label-dot" style="background:var(--green);"></span>Decision Timeline</div>
+          <div class="exp-title">Every decision.<br>Every reason. Forever.</div>
+          <div class="exp-desc">A permanent, structured record of what was decided and why — across every team and every quarter. Institutional memory that compounds.</div>
+        </div>
+        <div class="dtl" style="margin-top:22px;">
+          <div class="dtl-item">
+            <div class="dtl-dot dtl-dot-active"></div>
+            <div class="dtl-content">
+              <div class="dtl-date">Mar 14 2025 · CEO, CPO</div>
+              <div class="dtl-decision">Paused APAC expansion — deprioritised for Q2</div>
+              <div class="dtl-reason">Insufficient regulatory clarity; revisit after Series B close</div>
+            </div>
+          </div>
+          <div class="dtl-item">
+            <div class="dtl-dot"></div>
+            <div class="dtl-content">
+              <div class="dtl-date">Feb 28 2025 · CTO</div>
+              <div class="dtl-decision">Migrated to microservices architecture</div>
+              <div class="dtl-reason">Latency reducing NPS; monolith was limiting scale</div>
+            </div>
+          </div>
+          <div class="dtl-item">
+            <div class="dtl-dot"></div>
+            <div class="dtl-content">
+              <div class="dtl-date">Jan 09 2025 · Board</div>
+              <div class="dtl-decision">Set primary KPI: $40M ARR by Dec 2025</div>
+              <div class="dtl-reason">Series B thesis anchored to enterprise segment penetration</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INTERACTIVE KIL DEMO -->
+<section id="demo">
+  <div class="container">
+    <div class="demo-intro">
+      <div class="demo-scenario-badge reveal">
+        <span class="demo-scenario-dot"></span>
+        Live Demo — Meridian Group · Series B · 340 people
+      </div>
+      <p class="section-eyebrow reveal">See it in action</p>
+      <h2 class="section-title reveal">Experience the KempX<br>Intelligence Layer.</h2>
+      <p class="section-body reveal">
+        This is Meridian Group. Series B. 340 people. Q3 revenue goal at risk. Navigate the four surfaces of the KempX Intelligence Layer and experience what it means to have an intelligence layer above your stack.
+      </p>
+    </div>
+
+    <div class="demo-shell reveal">
+      <!-- Top tab bar -->
+      <div class="demo-topbar">
+        <div class="demo-tab demo-tab-active" onclick="switchDemo('gg',this)"><span class="demo-tab-icon">⬡</span>Goal Graph</div>
+        <div class="demo-tab" onclick="switchDemo('sf',this)"><span class="demo-tab-icon">⚡</span>Signal Feed</div>
+        <div class="demo-tab" onclick="switchDemo('dt',this)"><span class="demo-tab-icon">🧠</span>Decision Timeline</div>
+        <div class="demo-tab" onclick="switchDemo('km',this)"><span class="demo-tab-icon">🌐</span>Knowledge Map</div>
+      </div>
+
+      <!-- Context banner -->
+      <div class="demo-context">
+        <div class="demo-context-item"><span class="demo-context-dot"></span> Meridian Group · Enterprise SaaS · Founded 2019</div>
+        <div class="demo-context-item">Primary Goal: £40M ARR by Dec 2025</div>
+        <div class="demo-context-item">KempX active since: Jan 2025 · 847 signals generated</div>
+      </div>
+
+      <!-- ── PANEL 1: GOAL GRAPH ── -->
+      <div class="demo-panel demo-panel-active" id="demo-gg">
+        <div class="demo-gg">
+          <div class="demo-gg-root" onclick="demoGGClick(this)">
+            Series B Goal: £40M ARR by Dec 2025
+            <div class="demo-gg-root-meta">Click any node to inspect · 3 signals active</div>
+          </div>
+          <div class="demo-gg-conn"></div>
+          <div class="demo-gg-row">
+
+            <div class="demo-gg-branch">
+              <div class="demo-gg-node flagged" onclick="demoGGClick(this,'revenue')">
+                Enterprise Revenue
+                <div class="demo-gg-status" style="color:var(--red);">⚠ AT RISK</div>
+              </div>
+              <div class="demo-gg-conn" style="height:14px;"></div>
+              <div class="demo-gg-leaves">
+                <div class="demo-gg-leaf leaf-risk" onclick="demoGGClick(this,'apac')">APAC Expansion <span>PAUSED</span></div>
+                <div class="demo-gg-leaf leaf-risk" onclick="demoGGClick(this,'pipeline')">EMEA Pipeline <span>-18%</span></div>
+                <div class="demo-gg-leaf" onclick="demoGGClick(this,'smb')">SMB Segment <span>On track</span></div>
+              </div>
+            </div>
+
+            <div class="demo-gg-branch">
+              <div class="demo-gg-node watch" onclick="demoGGClick(this,'product')">
+                Product Readiness
+                <div class="demo-gg-status" style="color:var(--gold);">◐ WATCH</div>
+              </div>
+              <div class="demo-gg-conn" style="height:14px;"></div>
+              <div class="demo-gg-leaves">
+                <div class="demo-gg-leaf" onclick="demoGGClick(this,'eng')">Eng Sprint Q3-4 <span style="color:var(--red);">⚠ Misaligned</span></div>
+                <div class="demo-gg-leaf leaf-ok" onclick="demoGGClick(this,'nps')">Onboarding NPS <span>55 ✓</span></div>
+                <div class="demo-gg-leaf" onclick="demoGGClick(this,'latency')">API Latency <span>In progress</span></div>
+              </div>
+            </div>
+
+            <div class="demo-gg-branch">
+              <div class="demo-gg-node on-track" onclick="demoGGClick(this,'ops')">
+                Operations
+                <div class="demo-gg-status" style="color:var(--green);">✓ ON TRACK</div>
+              </div>
+              <div class="demo-gg-conn" style="height:14px;"></div>
+              <div class="demo-gg-leaves">
+                <div class="demo-gg-leaf leaf-ok" onclick="demoGGClick(this,'hiring')">Hiring Plan <span>On track</span></div>
+                <div class="demo-gg-leaf leaf-ok" onclick="demoGGClick(this,'infra')">Infrastructure <span>Stable</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div id="gg-detail" style="margin:0 32px 28px; padding:18px 22px; background:var(--bg); border:1px solid var(--border); border-radius:12px; font-size:13.5px; color:var(--text-muted); line-height:1.65; display:none;">
+          <div id="gg-detail-content"></div>
+        </div>
+        <div class="demo-instruction">Click any node to inspect it &nbsp;·&nbsp; <span>3 active signals in this goal graph</span></div>
+      </div>
+
+      <!-- ── PANEL 2: SIGNAL FEED ── -->
+      <div class="demo-panel" id="demo-sf">
+        <div class="demo-sf">
+          <div class="demo-sf-header">
+            <div class="demo-sf-title">Active Signals · Meridian Group</div>
+            <div class="demo-sf-live"><span class="demo-sf-live-dot"></span>Live · Last updated 4 min ago</div>
+          </div>
+
+          <div class="demo-signal-card sig-risk" onclick="toggleSignal(this)">
+            <div class="demo-sig-icon">⚠️</div>
+            <div class="demo-sig-body">
+              <div class="demo-sig-meta">
+                <div class="demo-sig-type">Risk · Strategic</div>
+                <div class="demo-sig-time">Detected 2h ago</div>
+              </div>
+              <div class="demo-sig-text">Q3 revenue goal requires 22% growth — current trajectory shows 11%. Gap compounds 3% per week without intervention. Decision window is narrowing.</div>
+              <div class="demo-sig-source">Source: Goal Graph × CRM pipeline × Finance signals</div>
+              <div class="demo-sig-expand">
+                <div class="demo-sig-detail">
+                  KempX cross-referenced your Q3 goal (set Jan 9 by the Board) with live CRM pipeline data and detected a 11-point shortfall. At current close rates, the gap will reach 18% by end of September — two quarters before year-end review. This signal was generated without anyone querying it.
+                  <div class="demo-sig-action" onclick="event.stopPropagation(); alert('In a live environment, this would open the revenue intervention workflow.')">→ View intervention options</div>
+                </div>
+              </div>
+            </div>
+            <svg class="demo-sig-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="demo-signal-card sig-align" onclick="toggleSignal(this)">
+            <div class="demo-sig-icon">🔄</div>
+            <div class="demo-sig-body">
+              <div class="demo-sig-meta">
+                <div class="demo-sig-type">Misalignment · Operational</div>
+                <div class="demo-sig-time">Detected 6h ago</div>
+              </div>
+              <div class="demo-sig-text">Engineering sprint Q3-4 goal conflicts with the product roadmap decision made on March 14th. Six people are working toward a deprecated objective.</div>
+              <div class="demo-sig-source">Source: Goal Graph × Decision Memory × Jira</div>
+              <div class="demo-sig-expand">
+                <div class="demo-sig-detail">
+                  On March 14th, the CPO and CTO agreed to deprioritise the self-serve onboarding flow in favour of enterprise-first API features. KempX retained that decision. It then detected that Engineering Sprint Q3-4, created last Tuesday, includes three tickets directly building the deprioritised flow — affecting six engineers.
+                  <div class="demo-sig-action" onclick="event.stopPropagation(); alert('In a live environment, this would link to the March 14th decision record.')">→ View the March 14th decision</div>
+                </div>
+              </div>
+            </div>
+            <svg class="demo-sig-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="demo-signal-card sig-gap" onclick="toggleSignal(this)">
+            <div class="demo-sig-icon">📭</div>
+            <div class="demo-sig-body">
+              <div class="demo-sig-meta">
+                <div class="demo-sig-type">Gap · Decision Context</div>
+                <div class="demo-sig-time">Detected 18h ago</div>
+              </div>
+              <div class="demo-sig-text">Partnership with Vertex Co. is 14 days from renewal. The original evaluation criteria and decision rationale from 2024 are not accessible to anyone currently involved.</div>
+              <div class="demo-sig-source">Source: Decision Memory × Calendar × CRM</div>
+              <div class="demo-sig-expand">
+                <div class="demo-sig-detail">
+                  KempX detected the renewal date in your CRM (Aug 15), then searched Decision Memory for the original partnership evaluation. The decision was made by two people who have since left the company. The rationale, pricing justification, and performance criteria were never formally documented. KempX flagged this 14 days before renewal — not the day before.
+                  <div class="demo-sig-action" onclick="event.stopPropagation(); alert('In a live environment, this would surface all related context fragments KempX has found.')">→ Recover available context</div>
+                </div>
+              </div>
+            </div>
+            <svg class="demo-sig-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+          <div class="demo-signal-card sig-insight" onclick="toggleSignal(this)">
+            <div class="demo-sig-icon">💡</div>
+            <div class="demo-sig-body">
+              <div class="demo-sig-meta">
+                <div class="demo-sig-type">Insight · Cross-team Pattern</div>
+                <div class="demo-sig-time">Detected 2 days ago</div>
+              </div>
+              <div class="demo-sig-text">Three separate teams have independently flagged the same customer friction point over 30 days. No one has connected these signals yet — until now.</div>
+              <div class="demo-sig-source">Source: Knowledge Map × Slack × CRM pattern analysis</div>
+              <div class="demo-sig-expand">
+                <div class="demo-sig-detail">
+                  Sales flagged it in a Slack thread on June 12. Customer Success logged it in a CRM note on June 19. Engineering raised it as a low-priority ticket on June 28. KempX's Knowledge Map connected these three isolated fragments into a single pattern — and surfaced it as a structural product gap affecting conversion.
+                  <div class="demo-sig-action" onclick="event.stopPropagation(); alert('In a live environment, this would show all three source fragments linked together.')">→ View the connected pattern</div>
+                </div>
+              </div>
+            </div>
+            <svg class="demo-sig-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+
+        </div>
+        <div class="demo-instruction">Click any signal to expand it &nbsp;·&nbsp; <span>KempX generated these without being asked</span></div>
+      </div>
+
+      <!-- ── PANEL 3: DECISION TIMELINE ── -->
+      <div class="demo-panel" id="demo-dt">
+        <div class="demo-dt">
+          <div class="demo-dt-header">
+            <div class="demo-dt-title">Decision Memory · Meridian Group</div>
+            <div class="demo-dt-count">47 decisions recorded · Jan 2025 → present</div>
+          </div>
+          <div class="demo-timeline">
+
+            <div class="demo-dt-item dt-active" onclick="toggleDecision(this)">
+              <div class="demo-dt-dot"></div>
+              <div class="demo-dt-row">
+                <div class="demo-dt-main">
+                  <div class="demo-dt-date">Mar 14 2025 · CPO + CTO · Meeting: Q2 Roadmap Review</div>
+                  <div class="demo-dt-decision">Deprioritised self-serve onboarding flow for Q2–Q3</div>
+                  <div class="demo-dt-reason">Enterprise-first API features required for two in-flight deals. Onboarding flow to resume Q4 pending headcount.</div>
+                </div>
+                <div class="demo-dt-tag tag-paused">Paused</div>
+              </div>
+              <div class="demo-dt-linked open">
+                <div class="demo-dt-link-row" onclick="event.stopPropagation()">
+                  <span class="demo-dt-link-icon">⚡</span>
+                  <span class="demo-dt-link-label">Active signal: Engineering sprint Q3-4 conflicts with this decision</span>
+                  <span class="demo-dt-link-badge">RISK</span>
+                </div>
+                <div class="demo-dt-link-row" onclick="event.stopPropagation()">
+                  <span class="demo-dt-link-icon">📄</span>
+                  <span class="demo-dt-link-label">Linked: Q2 Roadmap deck · Slack thread · 2 follow-up tasks</span>
+                  <span class="demo-dt-link-badge">3 sources</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-dt-item" onclick="toggleDecision(this)">
+              <div class="demo-dt-dot"></div>
+              <div class="demo-dt-row">
+                <div class="demo-dt-main">
+                  <div class="demo-dt-date">Feb 28 2025 · CTO · Architecture Review</div>
+                  <div class="demo-dt-decision">Migrated core product to microservices architecture</div>
+                  <div class="demo-dt-reason">Monolithic architecture was causing latency spikes reducing NPS. Microservices required for enterprise-grade SLAs.</div>
+                </div>
+                <div class="demo-dt-tag tag-active">Complete</div>
+              </div>
+              <div class="demo-dt-linked">
+                <div class="demo-dt-link-row" onclick="event.stopPropagation()">
+                  <span class="demo-dt-link-icon">📈</span>
+                  <span class="demo-dt-link-label">Outcome: API latency reduced 64% · NPS up 8 points since migration</span>
+                  <span class="demo-dt-link-badge">TRACKED</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-dt-item" onclick="toggleDecision(this)">
+              <div class="demo-dt-dot"></div>
+              <div class="demo-dt-row">
+                <div class="demo-dt-main">
+                  <div class="demo-dt-date">Feb 10 2025 · CEO + VP Sales · Pipeline Review</div>
+                  <div class="demo-dt-decision">Paused APAC expansion — regulatory compliance unresolved</div>
+                  <div class="demo-dt-reason">Legal confirmed 4–6 month timeline for GDPR-equivalent compliance in Singapore and Australia. APAC to resume Q1 2026.</div>
+                </div>
+                <div class="demo-dt-tag tag-watch">On hold</div>
+              </div>
+              <div class="demo-dt-linked">
+                <div class="demo-dt-link-row" onclick="event.stopPropagation()">
+                  <span class="demo-dt-link-icon">⚠️</span>
+                  <span class="demo-dt-link-label">Still unresolved: no legal update filed since Feb 10</span>
+                  <span class="demo-dt-link-badge">GAP</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="demo-dt-item" onclick="toggleDecision(this)">
+              <div class="demo-dt-dot"></div>
+              <div class="demo-dt-row">
+                <div class="demo-dt-main">
+                  <div class="demo-dt-date">Jan 09 2025 · Board · Series B Planning Session</div>
+                  <div class="demo-dt-decision">Set primary KPI: £40M ARR by December 2025</div>
+                  <div class="demo-dt-reason">Series B thesis anchored to enterprise segment penetration. Target set to support a £120M+ Series C in H1 2026.</div>
+                </div>
+                <div class="demo-dt-tag tag-board">Board</div>
+              </div>
+              <div class="demo-dt-linked">
+                <div class="demo-dt-link-row" onclick="event.stopPropagation()">
+                  <span class="demo-dt-link-icon">⚡</span>
+                  <span class="demo-dt-link-label">Active signal: current trajectory at 11% growth vs 22% required</span>
+                  <span class="demo-dt-link-badge">RISK</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="demo-instruction">Click any decision to see what KempX linked to it &nbsp;·&nbsp; <span>Every decision is permanently retrievable</span></div>
+      </div>
+
+      <!-- ── PANEL 4: KNOWLEDGE MAP ── -->
+      <div class="demo-panel" id="demo-km">
+        <div class="demo-km">
+          <div class="demo-km-header">
+            <div style="font-size:13px; font-weight:700; color:var(--text);">Knowledge Map · Meridian Group</div>
+            <div style="font-family:'DM Mono',monospace; font-size:10.5px; color:var(--text-dim);">847 nodes · 1,204 connections · 47 decisions mapped</div>
+          </div>
+          <div class="demo-km-canvas" id="kmCanvas">
+            <div class="demo-km-tooltip" id="kmTooltip">
+              <div class="demo-km-tip-title" id="kmTipTitle"></div>
+              <div class="demo-km-tip-meta" id="kmTipMeta"></div>
+            </div>
+            <svg id="kmSvg" width="100%" height="100%" style="position:absolute;inset:0;"></svg>
+          </div>
+          <div style="display:flex; gap:16px; margin-top:14px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim);"><span style="width:8px;height:8px;border-radius:50%;background:#7b6cff;display:inline-block;"></span>KempX core</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim);"><span style="width:8px;height:8px;border-radius:50%;background:#a78bfa;display:inline-block;"></span>Strategic</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim);"><span style="width:8px;height:8px;border-radius:50%;background:#38bdf8;display:inline-block;"></span>Operational</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim);"><span style="width:8px;height:8px;border-radius:50%;background:#f87171;display:inline-block;"></span>Risk signal</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-dim);"><span style="width:8px;height:8px;border-radius:50%;background:#34d399;display:inline-block;"></span>Resolved</div>
+          </div>
+        </div>
+        <div class="demo-instruction">Hover any node to explore it &nbsp;·&nbsp; <span>Every node connects to decisions, documents, and signals</span></div>
+      </div>
+
+    </div><!-- /demo-shell -->
+  </div>
+</section>
+
+<!-- SIGNAL ENGINE -->
+<section id="signal">
+  <div class="container">
+    <p class="section-eyebrow reveal" style="text-align:center;">Signal Engine</p>
+    <h2 class="section-title reveal" style="text-align:center; max-width:580px; margin:0 auto 16px;">The intelligence that<br>surfaces itself.</h2>
+    <p class="section-body reveal" style="text-align:center; margin:0 auto;">
+      Most tools wait to be asked. The KempX Intelligence Layer monitors everything, compares it against your goals and decision history, and tells you what needs your attention — before you know to look.
+    </p>
+
+    <div class="signal-breakthrough reveal">
+      <div class="sbt-marker">
+        <span style="display:inline-block; width:18px; height:1px; background:rgba(167,139,250,0.5);"></span>
+        This is where KempX becomes fundamentally different
+        <span style="display:inline-block; width:18px; height:1px; background:rgba(167,139,250,0.5);"></span>
+      </div>
+      <div class="sbt-title">Proactive intelligence. Not reactive reporting.</div>
+      <div class="sbt-body">
+        Every tool today shows you what has happened. The KempX Intelligence Layer tells you what is about to happen — because it understands your goals, your decisions, and the gaps between them. This is not a dashboard. This is the first time software has operated above the system level.
+      </div>
+    </div>
+
+    <div class="signal-examples" id="signalExamples">
+      <div class="signal-item">
+        <div class="signal-type signal-type-risk">⚠️</div>
+        <div class="signal-content">
+          <div class="signal-label">Risk · Strategic</div>
+          <div class="signal-text">Q3 revenue goal requires 22% growth — current trajectory shows 11%. Gap compounds 3% per week without intervention. Decision window is narrowing.</div>
+          <div class="signal-meta">Source: Goal Graph × CRM pipeline × Finance signals</div>
+        </div>
+        <span class="signal-badge badge-risk">Risk</span>
+      </div>
+      <div class="signal-item">
+        <div class="signal-type signal-type-gap">📭</div>
+        <div class="signal-content">
+          <div class="signal-label">Gap · Knowledge</div>
+          <div class="signal-text">Decision to enter APAC market has no documented research on regulatory requirements. This gap was first flagged 3 months ago and remains unresolved.</div>
+          <div class="signal-meta">Source: Decision Memory × Knowledge Map</div>
+        </div>
+        <span class="signal-badge badge-gap">Gap</span>
+      </div>
+      <div class="signal-item">
+        <div class="signal-type signal-type-align">🔄</div>
+        <div class="signal-content">
+          <div class="signal-label">Misalignment · Operational</div>
+          <div class="signal-text">Engineering team's current sprint goal conflicts with the product roadmap decision made on March 14th. Six people are working toward a deprecated objective.</div>
+          <div class="signal-meta">Source: Goal Graph × Decision Memory × Jira integration</div>
+        </div>
+        <span class="signal-badge badge-align">Misalign</span>
+      </div>
+      <div class="signal-item">
+        <div class="signal-type signal-type-insight">💡</div>
+        <div class="signal-content">
+          <div class="signal-label">Insight · Cross-team Pattern</div>
+          <div class="signal-text">Three separate teams have independently flagged the same customer friction point over the last 30 days. No one has connected these signals — until now.</div>
+          <div class="signal-meta">Source: Knowledge Map × Slack × CRM pattern analysis</div>
+        </div>
+        <span class="signal-badge badge-insight">Insight</span>
+      </div>
+      <div class="signal-item">
+        <div class="signal-type signal-type-gap">📭</div>
+        <div class="signal-content">
+          <div class="signal-label">Gap · Decision Context</div>
+          <div class="signal-text">Partnership with Meridian Co. is 18 days from renewal. The original evaluation criteria and decision rationale are not accessible to anyone involved in the renewal.</div>
+          <div class="signal-meta">Source: Decision Memory × Calendar × CRM</div>
+        </div>
+        <span class="signal-badge badge-gap">Gap</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section id="compare">
+  <div class="container">
+    <p class="section-eyebrow reveal">The difference</p>
+    <h2 class="section-title reveal">Without KempX.<br>With KempX.</h2>
+    <p class="reveal" style="font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:0.07em; margin-top:-8px; margin-bottom:0;">
+      The KempX Intelligence Layer changes what's possible at the system level.
+    </p>
+
+    <div class="compare-wrapper reveal">
+      <div class="compare-col">
+        <div class="compare-label">
+          <span class="compare-label-dot" style="background:var(--red);"></span>
+          Without the intelligence layer
+        </div>
+        <div class="compare-item"><span class="ci-icon">🌪️</span><span class="ci-text">12 tools, no single source of truth. Every system speaks a different language. Nothing connects.</span></div>
+        <div class="compare-item"><span class="ci-icon">🫥</span><span class="ci-text">AI models operate in isolation — no memory, no context, no understanding of your organisation's goals.</span></div>
+        <div class="compare-item"><span class="ci-icon">🔍</span><span class="ci-text">Decisions are buried in email threads. Reasoning is never recorded. History repeats.</span></div>
+        <div class="compare-item"><span class="ci-icon">⏰</span><span class="ci-text">Problems surface in post-mortems — days or weeks after the window to act has closed.</span></div>
+        <div class="compare-item"><span class="ci-icon">🔁</span><span class="ci-text">The same mistakes repeat across quarters because no system holds the institutional memory.</span></div>
+        <div class="compare-item"><span class="ci-icon">🧩</span><span class="ci-text">Strategy lives in documents that no tool understands, references, or acts upon.</span></div>
+      </div>
+      <div class="compare-col compare-col-after">
+        <div class="compare-label">
+          <span class="compare-label-dot" style="background:var(--green);"></span>
+          With the KempX Intelligence Layer
+        </div>
+        <div class="compare-item"><span class="ci-icon">🗺️</span><span class="ci-text-good">One intelligence layer above all tools. Everything connected, understood, mapped, and searchable.</span></div>
+        <div class="compare-item"><span class="ci-icon">🧠</span><span class="ci-text-good">Every AI model operates with full organisational context, goals, and decision history — always.</span></div>
+        <div class="compare-item"><span class="ci-icon">📋</span><span class="ci-text-good">Every decision is captured with its reasoning, linked to outcomes, and retrievable at any moment.</span></div>
+        <div class="compare-item"><span class="ci-icon">⚡</span><span class="ci-text-good">Risks, gaps, and misalignments surface automatically — days before they become critical or costly.</span></div>
+        <div class="compare-item"><span class="ci-icon">📈</span><span class="ci-text-good">Institutional memory compounds over time. Every quarter builds intelligently on the last.</span></div>
+        <div class="compare-item"><span class="ci-icon">🎯</span><span class="ci-text-good">Strategy is a living, connected system — not a document. Every action traces directly to a goal.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATIONS -->
+<section id="applications">
+  <div class="container">
+    <div class="apps-header">
+      <p class="section-eyebrow reveal">Applications</p>
+      <h2 class="section-title reveal">Built for organisations<br>that operate at scale.</h2>
+      <p class="section-body reveal">KempX adapts to the complexity of any domain — from enterprise operations to investment management — while remaining a single, coherent intelligence layer beneath everything.</p>
+      <p class="apps-platform-note reveal">Each application is powered by the same <strong>KempX Intelligence Layer</strong> — one platform, infinite applications.</p>
+    </div>
+
+    <div class="apps-tabs reveal">
+      <button class="app-tab active" onclick="switchTab('enterprise',this)">Enterprise</button>
+      <button class="app-tab" onclick="switchTab('retail',this)">Retail</button>
+      <button class="app-tab" onclick="switchTab('investor',this)">Investment</button>
+    </div>
+
+    <div class="app-panel active" id="tab-enterprise">
+      <div class="app-content">
+        <div class="app-industry">Enterprise Operations</div>
+        <div class="app-title">Run strategy as a living system, not a static document.</div>
+        <p class="app-desc">KempX gives enterprise leadership a real-time intelligence layer that connects organisational goals to day-to-day execution — surfacing misalignment before it becomes expensive.</p>
+        <div class="app-use-cases">
+          <div class="app-use">Real-time goal-to-execution alignment across 50+ teams</div>
+          <div class="app-use">Decision audit trails for board governance and compliance</div>
+          <div class="app-use">Automatic cross-department signal aggregation</div>
+          <div class="app-use">Strategic drift detection across quarters</div>
+          <div class="app-use">Full-context AI across all enterprise tools and systems</div>
+        </div>
+      </div>
+      <div class="app-mockup lift">
+        <div class="mockup-header">
+          <div class="mockup-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="mockup-title">KempX Intelligence Layer · Enterprise</div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><div class="mockup-label">APAC expansion — regulatory gap unresolved (11 days)</div><div class="mockup-status status-alert">RISK</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div><div class="mockup-label">Eng sprint misaligned with OKR 2.3 · 6 people affected</div><div class="mockup-status status-watch">WATCH</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><div class="mockup-label">Customer NPS recovery plan — on track for Q2</div><div class="mockup-status status-ok">OK</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><div class="mockup-label">Partnership renewal — decision context missing</div><div class="mockup-status status-alert">RISK</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><div class="mockup-label">Revenue trajectory — corrective action confirmed active</div><div class="mockup-status status-ok">OK</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-panel" id="tab-retail">
+      <div class="app-content">
+        <div class="app-industry">Retail & Commerce</div>
+        <div class="app-title">Know what's happening in your business before your reports do.</div>
+        <p class="app-desc">KempX connects commercial intelligence — from customer signals to inventory, supply chain to in-store operations — into a coherent, proactive intelligence layer that acts before problems compound.</p>
+        <div class="app-use-cases">
+          <div class="app-use">Early demand and inventory gap signals — before stockouts</div>
+          <div class="app-use">Customer experience pattern aggregation across all channels</div>
+          <div class="app-use">Campaign-to-performance goal alignment tracking</div>
+          <div class="app-use">Supplier decision memory and contextual renewal intelligence</div>
+          <div class="app-use">Multi-channel goal alignment in real time</div>
+        </div>
+      </div>
+      <div class="app-mockup lift">
+        <div class="mockup-header">
+          <div class="mockup-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="mockup-title">KempX Intelligence Layer · Retail</div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><div class="mockup-label">Autumn range — 3 top SKUs at 12-day stock risk</div><div class="mockup-status status-alert">RISK</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div><div class="mockup-label">Returns spike — linked to sizing change made in March</div><div class="mockup-status status-watch">PATTERN</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><div class="mockup-label">Summer campaign — above projected conversion</div><div class="mockup-status status-ok">OK</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><div class="mockup-label">Supplier B lead time — no decision context available</div><div class="mockup-status status-alert">GAP</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-panel" id="tab-investor">
+      <div class="app-content">
+        <div class="app-industry">Investment & Asset Management</div>
+        <div class="app-title">Intelligence that compounds. Like your returns should.</div>
+        <p class="app-desc">KempX brings decision memory and thesis tracking to investment operations — connecting deal intelligence, portfolio signals, and strategic objectives into a single, persistent intelligence layer.</p>
+        <div class="app-use-cases">
+          <div class="app-use">Investment thesis tracking and strategic drift detection</div>
+          <div class="app-use">Full decision memory across the deal lifecycle</div>
+          <div class="app-use">Portfolio signal aggregation and gap analysis</div>
+          <div class="app-use">Context-aware AI for deal analysis, IC memos, and diligence</div>
+          <div class="app-use">Cross-portfolio pattern recognition and early warning</div>
+        </div>
+      </div>
+      <div class="app-mockup lift">
+        <div class="mockup-header">
+          <div class="mockup-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="mockup-title">KempX Intelligence Layer · Investment</div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div><div class="mockup-label">Fund III thesis — SaaS vertical drift detected over 60d</div><div class="mockup-status status-watch">DRIFT</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;"></div><div class="mockup-label">Portfolio Co. D — covenant breach risk in 60 days</div><div class="mockup-status status-alert">RISK</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;"></div><div class="mockup-label">Deal thesis for Meridian — full decision context accessible</div><div class="mockup-status status-ok">READY</div></div>
+          <div class="mockup-row"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;"></div><div class="mockup-label">Pattern: 3 portfolio exits share same 90-day leading signal</div><div class="mockup-status status-ok">INSIGHT</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POSITIONING -->
+<section id="positioning">
+  <div class="container">
+    <p class="section-eyebrow reveal" style="text-align:center;">A new category</p>
+    <h2 class="section-title reveal" style="text-align:center;">This is not<br>what you think it is.</h2>
+    <p class="section-body reveal" style="text-align:center; margin:0 auto;">
+      KempX doesn't compete with your tools. It operates above them — introducing a new layer in the software stack that didn't exist before.
+    </p>
+
+    <p class="never-existed reveal">
+      This layer has never existed before.
+    </p>
+
+    <div class="category-statement reveal">
+      Software evolved from individual <em>tools</em> to connected <em>platforms.</em><br>
+      KempX introduces the next layer — <em>persistent intelligence above the entire stack.</em>
+    </div>
+
+    <div class="positioning-grid reveal">
+      <div class="pos-card">
+        <div class="pos-tag">Not a Dashboard</div>
+        <div class="pos-title">Proactive,<br>not passive</div>
+        <div class="pos-body">Dashboards show you what happened. The KempX Intelligence Layer tells you what is about to happen — and exactly why it matters to your goals right now.</div>
+      </div>
+      <div class="pos-card">
+        <div class="pos-tag">Not an AI Wrapper</div>
+        <div class="pos-title">Context-aware,<br>not stateless</div>
+        <div class="pos-body">AI wrappers pass prompts to models. KempX gives every model — across every tool — a complete, persistent picture of your organisation's goals, knowledge, and decision history.</div>
+      </div>
+      <div class="pos-card">
+        <div class="pos-tag">Not a Productivity Tool</div>
+        <div class="pos-title">System-level,<br>not task-level</div>
+        <div class="pos-body">Productivity tools help individuals work faster. The KempX Intelligence Layer ensures the organisation's work is the right work — aligned to goals, informed by decisions, and free of avoidable risk.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <p class="cta-super reveal">Request early access</p>
+    <h2 class="cta-title reveal">
+      The organisations that<br>understand this moment first<br>
+      <em style="font-style:italic; background:linear-gradient(130deg,var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">will operate at a level others cannot reach.</em>
+    </h2>
+    <p class="cta-sub reveal">KempX is how they get there. Available to a limited number of enterprise partners during early access.</p>
+    <div class="cta-actions reveal">
+      <a href="#" class="btn-primary">Request Early Access →</a>
+      <a href="#" class="btn-ghost">Talk to a founder</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo">
+      <div class="nav-logo-mark">K</div>
+      KempX
+      <span class="nav-layer-tag" style="margin-left:4px;">Intelligence Layer</span>
+    </div>
+    <div class="footer-copy">© 2025 KempX Ltd. All rights reserved. · The intelligence layer above your digital world.</div>
+  </div>
+  <div class="footer-links">
+    <a href="#">Product</a>
+    <a href="#">Research</a>
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<script>
+/* ─── THEME TOGGLE ─── */
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  try { localStorage.setItem('kempx-theme', html.getAttribute('data-theme')); } catch(e){}
+}
+(function() {
+  try {
+    const saved = localStorage.getItem('kempx-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch(e){}
+})();
+
+/* ─── SCROLL REVEAL ─── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -36px 0px' });
+document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => revealObserver.observe(el));
+
+/* ─── CARD GLOW ─── */
+function handleCardGlow(event, card) {
+  const r = card.getBoundingClientRect();
+  card.style.setProperty('--mx', ((event.clientX - r.left) / r.width * 100) + '%');
+  card.style.setProperty('--my', ((event.clientY - r.top) / r.height * 100) + '%');
+}
+
+/* ─── TABS ─── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+/* ─── SIGNAL PULSE ─── */
+let activeSignal = 0;
+const signals = document.querySelectorAll('.signal-item');
+setInterval(() => {
+  signals.forEach(s => { s.style.borderColor = ''; s.style.boxShadow = ''; });
+  activeSignal = (activeSignal + 1) % signals.length;
+  signals[activeSignal].style.borderColor = 'rgba(123,108,255,0.28)';
+  signals[activeSignal].style.boxShadow   = '0 0 0 1px rgba(123,108,255,0.12)';
+}, 2600);
+
+/* ─── CHAOS VISUAL ─── */
+const chaosViz = document.getElementById('chaosViz');
+const chaosNodes = [
+  {label:'📧 Email',x:8,y:4},{label:'📝 Notion',x:54,y:2},{label:'💬 Slack',x:68,y:20},
+  {label:'📊 Analytics',x:12,y:36},{label:'👥 CRM',x:58,y:52},{label:'📁 Drive',x:4,y:60},
+  {label:'🎯 Jira',x:38,y:8},{label:'🤖 ChatGPT',x:28,y:68},{label:'📈 Sheets',x:66,y:72},
+  {label:'🔔 Asana',x:78,y:40},
+];
+chaosNodes.forEach(n => {
+  const el = document.createElement('div');
+  el.className = 'chaos-node'; el.textContent = n.label;
+  el.style.left = n.x + '%'; el.style.top = n.y + '%';
+  chaosViz.appendChild(el);
+});
+const chaosSvg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+chaosSvg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;';
+chaosViz.insertBefore(chaosSvg, chaosViz.firstChild);
+setTimeout(() => {
+  const els = chaosViz.querySelectorAll('.chaos-node');
+  const vr = chaosViz.getBoundingClientRect();
+  const pos = Array.from(els).map(el => {
+    const r = el.getBoundingClientRect();
+    return { x: r.left - vr.left + r.width/2, y: r.top - vr.top + r.height/2 };
+  });
+  [[0,2],[0,4],[1,3],[1,6],[2,4],[2,9],[3,7],[4,8],[5,7],[6,1],[8,9],[3,9],[0,5],[1,8]].forEach(([a,b]) => {
+    if (!pos[a] || !pos[b]) return;
+    const l = document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',pos[a].x); l.setAttribute('y1',pos[a].y);
+    l.setAttribute('x2',pos[b].x); l.setAttribute('y2',pos[b].y);
+    l.setAttribute('stroke','rgba(123,108,255,0.08)'); l.setAttribute('stroke-width','1');
+    chaosSvg.appendChild(l);
+  });
+}, 300);
+
+/* ─── KNOWLEDGE GALAXY ─── */
+(function buildGalaxy() {
+  const svgEl = document.getElementById('galaxySvg');
+  if (!svgEl) return;
+
+  const galaxyNodes = [
+    { x:240, y:130, r:10, label:'KempX', color:'#7b6cff', ring:true },
+    { x:180, y:80,  r:6,  label:'Strategy', color:'#a78bfa' },
+    { x:310, y:75,  r:6,  label:'Product',  color:'#a78bfa' },
+    { x:140, y:150, r:5,  label:'Finance',  color:'#38bdf8' },
+    { x:340, y:170, r:5,  label:'Sales',    color:'#38bdf8' },
+    { x:200, y:195, r:5,  label:'People',   color:'#e4b87a' },
+    { x:390, y:110, r:4,  label:'CRM',      color:'#c4b5fd' },
+    { x:100, y:100, r:4,  label:'Docs',     color:'#c4b5fd' },
+    { x:310, y:220, r:4,  label:'Data',     color:'#34d399' },
+    { x:95,  y:185, r:4,  label:'Slack',    color:'#e4b87a' },
+    { x:430, y:160, r:4,  label:'Jira',     color:'#34d399' },
+    { x:155, y:225, r:3.5,label:'Email',    color:'#a78bfa' },
+    { x:380, y:50,  r:3.5,label:'Drive',    color:'#38bdf8' },
+    { x:55,  y:135, r:3.5,label:'Analytics',color:'#38bdf8' },
+    { x:255, y:40,  r:3.5,label:'Notion',   color:'#34d399' },
+  ];
+
+  const edges = [
+    [0,1],[0,2],[0,3],[0,4],[0,5],
+    [1,7],[1,14],[2,6],[2,12],[3,9],[3,13],[4,6],[4,10],[5,9],[5,11],
+    [1,2],[3,5],[4,10]
+  ];
+
+  // Edge elements stored for hover interaction
+  const edgeEls = [];
+  edges.forEach(([a,b]) => {
+    const na = galaxyNodes[a], nb = galaxyNodes[b];
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',na.x); line.setAttribute('y1',na.y);
+    line.setAttribute('x2',nb.x); line.setAttribute('y2',nb.y);
+    line.setAttribute('stroke','rgba(123,108,255,0.12)');
+    line.setAttribute('stroke-width','1');
+    line.style.transition = 'stroke 0.3s, stroke-width 0.3s, opacity 0.3s';
+    svgEl.appendChild(line);
+    edgeEls.push({ el:line, a, b });
+  });
+
+  // Node groups stored for hover
+  const nodeGroups = [];
+  galaxyNodes.forEach((n, i) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.style.cursor = 'default';
+    g.style.transition = 'opacity 0.3s';
+
+    if (n.ring) {
+      const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ring.setAttribute('cx',n.x); ring.setAttribute('cy',n.y); ring.setAttribute('r',n.r+6);
+      ring.setAttribute('fill','none'); ring.setAttribute('stroke','rgba(123,108,255,0.22)'); ring.setAttribute('stroke-width','1');
+      ring.style.transition = 'r 0.4s, stroke 0.3s';
+      g.appendChild(ring);
+      n._ring = ring;
+    }
+
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',n.x); c.setAttribute('cy',n.y); c.setAttribute('r',n.r);
+    c.setAttribute('fill', n.color); c.setAttribute('opacity','0.88');
+    c.style.transition = 'r 0.25s ease, opacity 0.25s';
+    g.appendChild(c);
+    n._circle = c;
+
+    if (i === 0 || n.r >= 5) {
+      const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',n.x); t.setAttribute('y',n.y+n.r+11); t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-family','DM Mono, monospace'); t.setAttribute('font-size',i===0?'9':'8');
+      t.setAttribute('fill','rgba(238,238,248,0.4)');
+      t.style.transition = 'fill 0.25s';
+      g.appendChild(t);
+      t.textContent = n.label;
+      n._label = t;
+    }
+
+    // Hover: highlight connected edges and dim others
+    g.addEventListener('mouseenter', () => {
+      const connected = edges.filter(([a,b]) => a===i || b===i).map(([a,b]) => a===i?b:a);
+      edgeEls.forEach(({ el, a, b }) => {
+        if (a === i || b === i) {
+          el.setAttribute('stroke','rgba(123,108,255,0.55)');
+          el.setAttribute('stroke-width','1.5');
+        } else {
+          el.setAttribute('stroke','rgba(123,108,255,0.04)');
+        }
+      });
+      nodeGroups.forEach((grp, j) => {
+        if (j === i) return;
+        if (connected.includes(j)) {
+          grp.style.opacity = '1';
+          galaxyNodes[j]._circle && galaxyNodes[j]._circle.setAttribute('opacity','1');
+        } else {
+          grp.style.opacity = '0.35';
+        }
+      });
+      c.setAttribute('r', n.r * 1.25);
+      c.setAttribute('opacity','1');
+      if (n._ring) {
+        n._ring.setAttribute('r', n.r + 10);
+        n._ring.setAttribute('stroke','rgba(123,108,255,0.38)');
+      }
+    });
+
+    g.addEventListener('mouseleave', () => {
+      edgeEls.forEach(({ el }) => {
+        el.setAttribute('stroke','rgba(123,108,255,0.12)');
+        el.setAttribute('stroke-width','1');
+      });
+      nodeGroups.forEach(grp => { grp.style.opacity = '1'; });
+      galaxyNodes.forEach(nd => {
+        nd._circle && nd._circle.setAttribute('opacity','0.88');
+      });
+      c.setAttribute('r', n.r);
+      if (n._ring) {
+        n._ring.setAttribute('r', n.r + 6);
+        n._ring.setAttribute('stroke','rgba(123,108,255,0.22)');
+      }
+    });
+
+    svgEl.appendChild(g);
+    nodeGroups.push(g);
+  });
+
+  // Pulse central node
+  let scale = 1, growing = true;
+  const centerNode = galaxyNodes[0];
+  function pulseGalaxy() {
+    growing ? scale += 0.004 : scale -= 0.004;
+    if (scale >= 1.16) growing = false;
+    if (scale <= 1.0)  growing = true;
+    centerNode._circle && centerNode._circle.setAttribute('r', centerNode.r * scale);
+    requestAnimationFrame(pulseGalaxy);
+  }
+  pulseGalaxy();
+})();
+
+/* ─── HERO PARTICLES ─── */
+(function heroParticles() {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.4;';
+  document.querySelector('.hero-canvas').appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+    particles = [];
+    const count = Math.floor((canvas.width * canvas.height) / 16000);
+    for (let i = 0; i < count; i++) particles.push({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      r: Math.random() * 1.1 + 0.25,
+      vx:(Math.random()-0.5)*0.26, vy:(Math.random()-0.5)*0.26,
+      a: Math.random() * 0.42 + 0.08,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const theme = document.documentElement.getAttribute('data-theme');
+    const rgb = theme === 'light' ? '123,108,255' : '167,139,250';
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x<0) p.x=canvas.width; if (p.x>canvas.width) p.x=0;
+      if (p.y<0) p.y=canvas.height; if (p.y>canvas.height) p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = `rgba(${rgb},${p.a})`; ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+
+/* ─── DEMO TAB SWITCHING ─── */
+function switchDemo(name, btn) {
+  document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('demo-tab-active'));
+  document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('demo-panel-active'));
+  btn.classList.add('demo-tab-active');
+  document.getElementById('demo-' + name).classList.add('demo-panel-active');
+  if (name === 'km') buildKMMap();
+}
+
+/* ─── GOAL GRAPH CLICK ─── */
+const ggDetails = {
+  default: { title: 'Meridian Group · Primary Goal', text: 'Series B goal set by the Board on Jan 9, 2025. Current trajectory: 11% growth vs 22% required. KempX has generated 3 active signals connected to this goal.' },
+  revenue: { title: 'Enterprise Revenue · AT RISK', text: 'EMEA pipeline is 18% below Q3 target. APAC expansion paused since Feb 10 — regulatory gap unresolved. Two enterprise deals in final negotiation. KempX is monitoring weekly close rate against the trajectory required to recover the gap.' },
+  apac:    { title: 'APAC Expansion · PAUSED', text: 'Paused Feb 10 by CEO + VP Sales. Legal confirmed 4–6 month regulatory timeline for Singapore and Australia. No compliance update filed since. KempX has flagged this as an open decision gap — the pause decision was made without a resolution plan.' },
+  pipeline:{ title: 'EMEA Pipeline · -18% vs Target', text: 'Current EMEA pipeline coverage is 1.4x, below the 2.1x required to hit Q3 target at current close rates. Three deals moved to Q4 in the last 30 days. KempX cross-referenced this with the Board goal set Jan 9 and rated it as a compounding risk.' },
+  smb:     { title: 'SMB Segment · On Track', text: 'SMB segment is performing to plan. 94 new accounts in Q2, average deal size up 12%. No active signals. KempX monitors SMB momentum as a partial offset to enterprise pipeline risk.' },
+  product: { title: 'Product Readiness · WATCH', text: 'Two items on watch: Engineering sprint Q3-4 conflicts with a March 14th decision (see active signal). API latency improvement is in progress but 2 weeks behind schedule. NPS target of 55 has been reached.' },
+  eng:     { title: 'Engineering Sprint Q3-4 · ⚠ Misaligned', text: 'On March 14th, CPO + CTO deprioritised the self-serve onboarding flow. Sprint Q3-4, created last Tuesday, includes 3 tickets building this exact flow — affecting 6 engineers. KempX detected the conflict by comparing the sprint scope against Decision Memory. No one had connected these two things.' },
+  nps:     { title: 'Onboarding NPS · 55 ✓', text: 'Target NPS of 55 reached as of last week, up from 47 in Q1. Linked to the microservices migration completed Feb 28, which reduced latency by 64%. KempX tracked this outcome back to the original architectural decision.' },
+  latency: { title: 'API Latency · In Progress', text: 'Post-migration latency is down 64% but enterprise SLA target of <120ms requires a further 18% reduction. Three engineering tickets in progress. KempX estimates completion in 3 weeks based on current velocity.' },
+  ops:     { title: 'Operations · On Track', text: 'Hiring plan and infrastructure are both on track. No active signals in this branch. KempX monitors operational goals as a foundation layer — issues here typically surface as strategic risks 6–8 weeks later.' },
+  hiring:  { title: 'Hiring Plan · On Track', text: '12 of 14 planned hires completed. Two senior engineering roles open, expected to close by end of July. KempX tracks hiring against revenue capacity planning — current trajectory supports Q4 growth targets.' },
+  infra:   { title: 'Infrastructure · Stable', text: 'All infrastructure targets met. Uptime 99.97% in Q2. Security audit completed June 15 with no critical findings. KempX has no active signals in this area.' },
+};
+
+function demoGGClick(el, key) {
+  const detail = ggDetails[key || 'default'];
+  const box = document.getElementById('gg-detail');
+  const content = document.getElementById('gg-detail-content');
+  if (!detail) return;
+  content.innerHTML = '<strong style="color:var(--text); display:block; margin-bottom:6px;">' + detail.title + '</strong>' + detail.text;
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ─── SIGNAL EXPAND ─── */
+function toggleSignal(card) {
+  const isExpanded = card.classList.contains('sig-expanded');
+  document.querySelectorAll('.demo-signal-card').forEach(c => {
+    c.classList.remove('sig-expanded');
+    const exp = c.querySelector('.demo-sig-expand');
+    if (exp) exp.classList.remove('open');
+  });
+  if (!isExpanded) {
+    card.classList.add('sig-expanded');
+    const exp = card.querySelector('.demo-sig-expand');
+    if (exp) exp.classList.add('open');
+  }
+}
+
+/* ─── DECISION EXPAND ─── */
+function toggleDecision(item) {
+  const isActive = item.classList.contains('dt-active');
+  document.querySelectorAll('.demo-dt-item').forEach(i => {
+    i.classList.remove('dt-active');
+    const linked = i.querySelector('.demo-dt-linked');
+    if (linked) linked.classList.remove('open');
+  });
+  if (!isActive) {
+    item.classList.add('dt-active');
+    const linked = item.querySelector('.demo-dt-linked');
+    if (linked) linked.classList.add('open');
+  }
+}
+
+/* ─── KNOWLEDGE MAP ─── */
+let kmBuilt = false;
+function buildKMMap() {
+  if (kmBuilt) return;
+  kmBuilt = true;
+  const canvas = document.getElementById('kmCanvas');
+  const svgEl = document.getElementById('kmSvg');
+  const tooltip = document.getElementById('kmTooltip');
+  const tipTitle = document.getElementById('kmTipTitle');
+  const tipMeta = document.getElementById('kmTipMeta');
+  if (!svgEl || !canvas) return;
+
+  const W = canvas.offsetWidth || 700;
+  const H = canvas.offsetHeight || 360;
+
+  const kmNodes = [
+    { id:0,  x:W*0.50, y:H*0.50, r:14, label:'KempX',        color:'#7b6cff', type:'core',   meta:'847 nodes · 1,204 connections', ring:true },
+    { id:1,  x:W*0.32, y:H*0.24, r:9,  label:'Series B Goal', color:'#a78bfa', type:'strat',  meta:'£40M ARR · 3 active signals' },
+    { id:2,  x:W*0.68, y:H*0.22, r:9,  label:'Product',       color:'#a78bfa', type:'strat',  meta:'NPS: 55 ✓ · 1 watch item' },
+    { id:3,  x:W*0.20, y:H*0.55, r:8,  label:'Revenue',       color:'#f87171', type:'risk',   meta:'AT RISK · 18% below target' },
+    { id:4,  x:W*0.80, y:H*0.55, r:8,  label:'Engineering',   color:'#38bdf8', type:'ops',    meta:'Sprint Q3-4 · ⚠ misaligned' },
+    { id:5,  x:W*0.38, y:H*0.80, r:7,  label:'Decisions',     color:'#e4b87a', type:'ops',    meta:'47 recorded · 4 with signals' },
+    { id:6,  x:W*0.62, y:H*0.78, r:7,  label:'People',        color:'#34d399', type:'res',    meta:'12/14 hires · On track' },
+    { id:7,  x:W*0.15, y:H*0.30, r:5,  label:'APAC',          color:'#f87171', type:'risk',   meta:'PAUSED · Regulatory gap' },
+    { id:8,  x:W*0.82, y:H*0.32, r:5,  label:'API Latency',   color:'#38bdf8', type:'ops',    meta:'In progress · -64% so far' },
+    { id:9,  x:W*0.50, y:H*0.20, r:5,  label:'EMEA Pipeline', color:'#f87171', type:'risk',   meta:'-18% vs Q3 target' },
+    { id:10, x:W*0.22, y:H*0.75, r:5,  label:'Partnerships',  color:'#e4b87a', type:'ops',    meta:'Vertex Co. renewal in 14d' },
+    { id:11, x:W*0.75, y:H*0.72, r:5,  label:'Onboarding',    color:'#34d399', type:'res',    meta:'NPS 55 ✓ · Resolved' },
+    { id:12, x:W*0.10, y:H*0.65, r:4,  label:'CRM',           color:'#c4b5fd', type:'ops',    meta:'4 signals cross-referenced' },
+    { id:13, x:W*0.90, y:H*0.45, r:4,  label:'Jira',          color:'#c4b5fd', type:'ops',    meta:'Sprint conflicts detected' },
+    { id:14, x:W*0.55, y:H*0.92, r:4,  label:'Slack',         color:'#c4b5fd', type:'ops',    meta:'3 pattern fragments found' },
+  ];
+
+  const kmEdges = [
+    [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],
+    [1,3],[1,7],[1,9],[2,4],[2,8],[2,11],
+    [3,7],[3,9],[3,12],[4,8],[4,13],[5,10],
+    [5,7],[6,11],[6,14],[10,12],[11,14]
+  ];
+
+  const colorMap = { core:'#7b6cff', strat:'#a78bfa', ops:'#38bdf8', risk:'#f87171', res:'#34d399' };
+
+  // Draw edges first
+  kmEdges.forEach(([a,b]) => {
+    const na = kmNodes[a], nb = kmNodes[b];
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',na.x); line.setAttribute('y1',na.y);
+    line.setAttribute('x2',nb.x); line.setAttribute('y2',nb.y);
+    line.setAttribute('stroke','rgba(123,108,255,0.1)');
+    line.setAttribute('stroke-width','1');
+    line.style.transition = 'stroke 0.25s, stroke-width 0.25s';
+    line.dataset.a = a; line.dataset.b = b;
+    svgEl.appendChild(line);
+  });
+
+  // Draw nodes
+  kmNodes.forEach((n) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.style.cursor = 'pointer';
+
+    if (n.ring) {
+      const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ring.setAttribute('cx',n.x); ring.setAttribute('cy',n.y); ring.setAttribute('r',n.r+7);
+      ring.setAttribute('fill','none'); ring.setAttribute('stroke','rgba(123,108,255,0.2)'); ring.setAttribute('stroke-width','1.5');
+      ring.setAttribute('stroke-dasharray','4 3');
+      g.appendChild(ring);
+    }
+
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',n.x); c.setAttribute('cy',n.y); c.setAttribute('r',n.r);
+    c.setAttribute('fill',n.color); c.setAttribute('opacity','0.9');
+    c.style.transition = 'r 0.2s, opacity 0.2s';
+    g.appendChild(c);
+
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',n.x); t.setAttribute('y',n.y + n.r + 12);
+    t.setAttribute('text-anchor','middle'); t.setAttribute('font-family','DM Mono, monospace');
+    t.setAttribute('font-size', n.r >= 8 ? '9' : '8');
+    t.setAttribute('fill','rgba(238,238,248,0.55)');
+    t.textContent = n.label;
+    g.appendChild(t);
+
+    g.addEventListener('mouseenter', (e) => {
+      // Highlight connected edges
+      const connected = kmEdges.filter(([a,b]) => a===n.id || b===n.id).map(([a,b]) => a===n.id?b:a);
+      svgEl.querySelectorAll('line').forEach(line => {
+        const a = parseInt(line.dataset.a), b = parseInt(line.dataset.b);
+        if (a === n.id || b === n.id) {
+          line.setAttribute('stroke','rgba(123,108,255,0.55)');
+          line.setAttribute('stroke-width','1.5');
+        } else {
+          line.setAttribute('stroke','rgba(123,108,255,0.03)');
+        }
+      });
+      c.setAttribute('r', n.r * 1.3); c.setAttribute('opacity','1');
+      // Tooltip
+      tipTitle.textContent = n.label;
+      tipMeta.textContent = n.meta;
+      const cr = canvas.getBoundingClientRect();
+      const x = Math.min(n.x + 14, W - 260);
+      const y = Math.max(n.y - 40, 8);
+      tooltip.style.left = x + 'px';
+      tooltip.style.top  = y + 'px';
+      tooltip.classList.add('visible');
+    });
+    g.addEventListener('mouseleave', () => {
+      svgEl.querySelectorAll('line').forEach(line => {
+        line.setAttribute('stroke','rgba(123,108,255,0.1)');
+        line.setAttribute('stroke-width','1');
+      });
+      c.setAttribute('r', n.r); c.setAttribute('opacity','0.9');
+      tooltip.classList.remove('visible');
+    });
+
+    svgEl.appendChild(g);
+  });
+
+  // Ambient pulse on KempX node
+  const kempxCircle = svgEl.querySelectorAll('circle')[1];
+  let ks = 1, kg = true;
+  function pulseKM() {
+    kg ? ks += 0.004 : ks -= 0.004;
+    if (ks >= 1.14) kg = false; if (ks <= 1.0) kg = true;
+    if (kempxCircle) kempxCircle.setAttribute('r', kmNodes[0].r * ks);
+    requestAnimationFrame(pulseKM);
+  }
+  pulseKM();
+}
+</script>
+</body>
+</html>
